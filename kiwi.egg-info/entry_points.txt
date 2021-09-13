@@ -1,0 +1,14 @@
+[console_scripts]
+kiwi-ng = kiwi.kiwi:main
+kiwicompat = kiwi.kiwi_compat:main
+
+[kiwi.tasks]
+image_info = kiwi.tasks.image_info
+image_resize = kiwi.tasks.image_resize
+result_bundle = kiwi.tasks.result_bundle
+result_list = kiwi.tasks.result_list
+system_build = kiwi.tasks.system_build
+system_create = kiwi.tasks.system_create
+system_prepare = kiwi.tasks.system_prepare
+system_update = kiwi.tasks.system_update
+

@@ -1,0 +1,186 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "KIWI" "8" "Sep 10, 2021" "9.23.56" "KIWI NG"
+.SH NAME
+kiwi \- Creating Operating System Images
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH SYNOPSIS
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+kiwi\-ng [global options] service <command> [<args>]
+
+kiwi\-ng \-h | \-\-help
+kiwi\-ng [\-\-profile=<name>...]
+        [\-\-temp\-dir=<directory>]
+        [\-\-type=<build_type>]
+        [\-\-logfile=<filename>]
+        [\-\-debug]
+        [\-\-color\-output]
+        [\-\-config=<configfile>]
+    image <command> [<args>...]
+kiwi\-ng [\-\-debug]
+        [\-\-color\-output]
+        [\-\-config=<configfile>]
+    result <command> [<args>...]
+kiwi\-ng [\-\-profile=<name>...]
+        [\-\-shared\-cache\-dir=<directory>]
+        [\-\-temp\-dir=<directory>]
+        [\-\-target\-arch=<name>]
+        [\-\-type=<build_type>]
+        [\-\-logfile=<filename>]
+        [\-\-debug]
+        [\-\-color\-output]
+        [\-\-config=<configfile>]
+    system <command> [<args>...]
+kiwi\-ng compat <legacy_args>...
+kiwi\-ng \-v | \-\-version
+kiwi\-ng help
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH DESCRIPTION
+.sp
+KIWI NG is an imaging solution that is based on an image XML description.
+Such a description is represented by a directory which includes at least
+one \fBconfig.xml\fP or \fB\&.kiwi\fP file and may as well include other files like
+scripts or configuration data.
+.sp
+A collection of example image descriptions can be found on the github
+repository here: \fI\%https://github.com/OSInside/kiwi\-descriptions\fP\&. Most of the
+descriptions provide a so called appliance image. Appliance means that it\(aqs a small, text only based
+image including a predefined remote source setup to allow installation of missing software
+components at a later point in time.
+.sp
+KIWI NG operates in two steps. The system build command combines
+both steps into one to make it easier to start with KIWI NG. The first
+step is the preparation step and if that step was successful, a
+creation step follows which is able to create different image output
+types.
+.sp
+In the preparation step, you prepare a directory including the contents
+of your new filesystem based on one or more software package source(s)
+The creation step is based on the result of the preparation step and
+uses the contents of the new image root tree to create the output
+image.
+.sp
+KIWI NG supports the creation of the following image types:
+.INDENT 0.0
+.IP \(bu 2
+ISO Live Systems
+.IP \(bu 2
+Virtual Disk for e.g cloud frameworks
+.IP \(bu 2
+OEM Expandable Disk for system deployment from ISO or the network
+.IP \(bu 2
+File system images for deployment in a pxe boot environment
+.UNINDENT
+.sp
+Depending on the image type a variety of different disk formats and
+architectures are supported.
+.SH GLOBAL OPTIONS
+.INDENT 0.0
+.TP
+.B \-\-color\-output
+Use Escape Sequences to print different types of information
+in colored output. The underlaying terminal has to understand
+those escape characters. Error messages appear red, warning
+messages yellow and debugging information will be printed light
+grey.
+.TP
+.BI \-\-config\fB= <configfile>
+Use specified runtime configuration file. If not specified the
+runtime configuration is looked up at \fB~/.config/kiwi/config.yml\fP
+or \fB/etc/kiwi.yml\fP
+.TP
+.B \-\-debug
+Print debug information on the commandline.
+.TP
+.BI \-\-logfile\fB= <filename>
+Specify log file. the logfile contains detailed information about
+the process.
+.TP
+.BI \-\-profile\fB= <name>
+Select profile to use. The specified profile must be part of the
+XML description. The option can be specified multiple times to
+allow using a combination of profiles.
+.TP
+.BI \-\-shared\-cache\-dir\fB= <directory>
+Specify an alternative shared cache directory. The directory
+is shared via bind mount between the build host and image
+root system and contains information about package repositories
+and their cache and meta data. The default location is set
+to \fB/var/cache/kiwi\fP\&.
+.TP
+.BI \-\-temp\-dir\fB= <directory>
+Specify an alternative base temporary directory. The
+provided path is used as base directory to store temporary
+files and directories. By default \fB/var/tmp\fP is used.
+.TP
+.BI \-\-target\-arch\fB= <name>
+Specify the image architecture. By default the host architecture is
+used as the image architecture. If the specified architecture name
+does not match the host architecture and is therefore requesting
+a cross architecture image build, it\(aqs important to understand that
+for this process to work a preparatory step to support the image
+architecture and binary format on the building host is required
+and not a responsibility of KIWI NG.
+.TP
+.BI \-\-type\fB= <build_type>
+Select image build type. The specified build type must be configured
+as part of the XML description.
+.TP
+.B \-\-version
+Show program version
+.UNINDENT
+.SH EXAMPLE
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ git clone https://github.com/OSInside/kiwi
+
+$ sudo kiwi\-ng system build \e
+    \-\-description kiwi/build\-tests/x86/leap/test\-image\-disk \e
+    \-\-set\-repo obs://openSUSE:Leap:15.3/standard \e
+    \-\-target\-dir /tmp/myimage
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH AUTHOR
+Marcus Schäfer
+.SH COPYRIGHT
+2020, Marcus Schäfer
+.\" Generated by docutils manpage writer.
+.
