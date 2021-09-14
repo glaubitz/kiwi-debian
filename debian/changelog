@@ -1,3 +1,12 @@
+kiwi (9.23.57-1) UNRELEASED; urgency=medium
+
+  * Fix copyright file
+  * Fix copyright file
+  * More Debian fixes
+  * New upstream version 9.23.57
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Tue, 14 Sep 2021 12:36:59 +0200
+
 kiwi (9.23.56-1) unstable; urgency=medium
 
   * Initial release (Closes: #994231)

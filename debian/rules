@@ -15,6 +15,7 @@
 override_dh_auto_build:
 	make tools
 	dh_auto_build
+	make -C doc man
 
 override_dh_auto_install:
 	make buildroot=${DESTDIR} install
