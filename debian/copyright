@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: kiwi
-Upstream-Contact: <preferred name and address to reach the upstream project>
+Upstream-Contact: Marcus Schäfer <marcus.schaefer@gmail.com>
 Source: https://osinside.github.io/kiwi
 
 Files: *
