@@ -4,8 +4,10 @@ Upstream-Contact: Marcus Schäfer <marcus.schaefer@gmail.com>
 Source: https://osinside.github.io/kiwi
 
 Files: *
-Copyright: <years> <put author's name and email here>
-           <years> <likewise for another author>
+Copyright: 2015-2021 Marcus Schäfer <ms@suse.de>
+           2016-2021 David Cassany <dcassany@suse.com>
+           2017-2021 Neal Gompa <ngompa13@gmail.com>
+           and contributors
 License: GPL-3+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
