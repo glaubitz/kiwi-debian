@@ -21,4 +21,4 @@ override_dh_auto_install:
 	dh_auto_install
 
 %:
-	dh $@ --with python3 --buildsystem=pybuild
+	dh $@ --with python3,sphinxdoc --buildsystem=pybuild
