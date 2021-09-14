@@ -1,16 +1,25 @@
 Source: kiwi
-Section: unknown
+Section: otherosfs
 Priority: optional
 Maintainer: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Build-Depends: debhelper-compat (= 13)
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               passwd,
+               python3-all,
+               python3-docopt,
+               python3-requests,
+               python3-setuptools,
+               python3-yaml
 Standards-Version: 4.5.1
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Browser: https://salsa.debian.org/debian/kiwi
-#Vcs-Git: https://salsa.debian.org/debian/kiwi.git
+Homepage: https://osinside.github.io/kiwi
+Vcs-Browser: https://salsa.debian.org/debian/kiwi
+Vcs-Git: https://salsa.debian.org/debian/kiwi.git
 Rules-Requires-Root: no
 
 Package: kiwi
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
+Description: Flexible OS Image and Appliance Builder
+ The KIWI Image System provides an operating system image builder
+ for Linux supported hardware platforms as well as for virtualization
+ and cloud systems.

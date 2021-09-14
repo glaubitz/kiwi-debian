@@ -1,0 +1,4 @@
+# Compulsory line, this is a version 4 file
+version=4
+# PyPI
+https://pypi.debian.net/kiwi/kiwi-(.+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
