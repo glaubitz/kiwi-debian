@@ -1,3 +1,11 @@
+kiwi (9.23.58-1) unstable; urgency=medium
+
+  [ Marcus Schäfer ]
+  * Let the tests run at build time
+  * Added anymarkup to dependency chain
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Wed, 15 Sep 2021 14:55:36 +0200
+
 kiwi (9.23.57-1) unstable; urgency=medium
 
   * Fix copyright file
