@@ -1,6 +1,9 @@
 kiwi for Debian
 --------------
 
-<possible notes regarding this package - if none, delete this file>
+The kiwi Debian package intentionally does not ship the 'kiwicompat' command as this is just
+a wrapper around 'kiwi-ng'. 'kiwicompat' is intended to provide the command line syntax of the
+'kiwi' command of the legacy kiwi package that was never part of Debian. Upstream is planning
+to remove the 'kiwicompat' command in the near future.
 
  -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Mon, 13 Sep 2021 14:48:05 +0200

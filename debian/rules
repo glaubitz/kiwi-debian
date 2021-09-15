@@ -18,11 +18,9 @@ override_dh_auto_build:
 	make -C doc man
 
 override_dh_auto_install:
-	make buildroot=${DESTDIR} install
+	make buildroot= install
 	dh_auto_install
-
-override_dh_install:
-	dh_install -Xkiwicompat
+	rm -f debian/kiwi/usr/bin/kiwicompat
 
 %:
 	dh $@ --with python3,sphinxdoc --buildsystem=pybuild
