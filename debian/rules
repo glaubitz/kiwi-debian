@@ -12,10 +12,12 @@
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
-export PYTHONPATH := $(CURDIR)
+export PYTHONPATH = $(CURDIR)
 
 override_dh_auto_test:
+ifeq ($(filter nocheck nobench, $(DEB_BUILD_OPTIONS)),)
 	/bin/sh -c "cd test/unit && pytest-3"
+endif
 
 override_dh_auto_build:
 	make tools
