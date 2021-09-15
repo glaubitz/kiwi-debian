@@ -12,6 +12,11 @@
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
+export PYTHONPATH := $(CURDIR)
+
+override_dh_auto_test:
+	/bin/sh -c "cd test/unit && pytest-3"
+
 override_dh_auto_build:
 	make tools
 	dh_auto_build
