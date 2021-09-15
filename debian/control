@@ -12,8 +12,11 @@ Build-Depends: debhelper-compat (= 13),
                python3-setuptools,
                python3-sphinx,
                python3-sphinx-rtd-theme,
-               python3-xattr,
-               python3-yaml
+               python3-pyxattr,
+               python3-yaml,
+               python3-pytest,
+               python3-mock,
+               python3-testinfra
 Standards-Version: 4.5.1
 Homepage: https://osinside.github.io/kiwi
 Vcs-Browser: https://salsa.debian.org/debian/kiwi
