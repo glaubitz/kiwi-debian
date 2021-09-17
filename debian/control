@@ -38,18 +38,18 @@ Description: Flexible OS Image and Appliance Builder
 Package: kiwi-dracut-lib
 Architecture: any
 Depends: bc,
-         cryptsetup,
          btrfs-progs,
-         gdisk,
+         cryptsetup,
+         dmsetup,
+         dracut,
          dracut-network,
          e2fsprogs,
+         gdisk,
          lvm2,
          mdadm,
          parted,
          xz-utils,
-         dmsetup,
-         dracut,
-	 ${misc:Depends}
+         ${misc:Depends}
 Description: KIWI - Dracut kiwi Library
  This package contains a collection of methods to provide a library
  for tasks done in other kiwi dracut modules
@@ -64,11 +64,7 @@ Description: KIWI - Dracut module for oem(repart) image type
 
 Package: kiwi-dracut-oem-dump
 Architecture: any
-Depends: kiwi-dracut-lib,
-         kexec-tools,
-         gawk,
-         kpartx,
-	 ${misc:Depends}
+Depends: gawk, kexec-tools, kiwi-dracut-lib, kpartx, ${misc:Depends}
 Description: KIWI - Dracut module for oem(install) image type
  This package contains the kiwi-dump and kiwi-dump-reboot dracut
  modules which is used to install an oem image onto a target disk.
@@ -80,14 +76,14 @@ Description: KIWI - Dracut module for oem(install) image type
 Package: kiwi-dracut-live
 Architecture: any
 Depends: dialog,
-         xfsprogs,
-         e2fsprogs,
          dmsetup,
-         dracut-network,
          dracut,
-         xorriso,
+         dracut-network,
+         e2fsprogs,
          parted,
-	 ${misc:Depends}
+         xfsprogs,
+         xorriso,
+         ${misc:Depends}
 Description: KIWI - Dracut module for iso(live) image type
  This package contains the kiwi-live dracut module which is used
  for booting iso(live) images built with KIWI
