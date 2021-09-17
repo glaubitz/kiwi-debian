@@ -48,14 +48,15 @@ Depends: bc,
          parted,
          xz-utils,
          dmsetup,
-         dracut
+         dracut,
+	 ${misc:Depends}
 Description: KIWI - Dracut kiwi Library
  This package contains a collection of methods to provide a library
  for tasks done in other kiwi dracut modules
 
 Package: kiwi-dracut-oem-repart
 Architecture: any
-Depends: kiwi-dracut-lib
+Depends: kiwi-dracut-lib, ${misc:Depends}
 Description: KIWI - Dracut module for oem(repart) image type
  This package contains the kiwi-repart dracut module which is
  used to repartition the oem disk image to the current disk
@@ -66,7 +67,8 @@ Architecture: any
 Depends: kiwi-dracut-lib,
          kexec-tools,
          gawk,
-         kpartx
+         kpartx,
+	 ${misc:Depends}
 Description: KIWI - Dracut module for oem(install) image type
  This package contains the kiwi-dump and kiwi-dump-reboot dracut
  modules which is used to install an oem image onto a target disk.
@@ -84,14 +86,15 @@ Depends: dialog,
          dracut-network,
          dracut,
          xorriso,
-         parted
+         parted,
+	 ${misc:Depends}
 Description: KIWI - Dracut module for iso(live) image type
  This package contains the kiwi-live dracut module which is used
  for booting iso(live) images built with KIWI
 
 Package: kiwi-dracut-overlay
 Architecture: any
-Depends: kiwi-dracut-lib
+Depends: kiwi-dracut-lib, ${misc:Depends}
 Description: KIWI - Dracut module for vmx(+overlay) image type
  This package contains the kiwi-overlay dracut module which is used
  for booting vmx images built with KIWI and configured to use an
