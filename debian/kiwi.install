@@ -1,3 +1,4 @@
+etc/kiwi.yml
 usr/bin/kiwi-ng
 usr/lib/python*/dist-packages/kiwi*
 usr/share/bash-completion/completions/kiwi-ng
