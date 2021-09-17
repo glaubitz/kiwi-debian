@@ -1,0 +1,2 @@
+usr/lib/dracut/modules.d/90kiwi-dump
+usr/lib/dracut/modules.d/99kiwi-dump-reboot

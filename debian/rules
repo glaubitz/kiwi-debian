@@ -25,9 +25,9 @@ override_dh_auto_build:
 	make -C doc man
 
 override_dh_auto_install:
-	make buildroot= install
+	make buildroot= install install_dracut
 	dh_auto_install
-	rm -f debian/kiwi/usr/bin/kiwicompat
+	rm -f debian/tmp/usr/bin/kiwicompat
 
 %:
 	dh $@ --with python3,sphinxdoc --buildsystem=pybuild

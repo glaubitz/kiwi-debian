@@ -34,3 +34,68 @@ Description: Flexible OS Image and Appliance Builder
  The KIWI Image System provides an operating system image builder
  for Linux supported hardware platforms as well as for virtualization
  and cloud systems.
+
+Package: kiwi-dracut-lib
+Architecture: any
+Depends: bc,
+         cryptsetup,
+         btrfs-progs,
+         gdisk,
+         dracut-network,
+         e2fsprogs,
+         grep,
+         lvm2,
+         mdadm,
+         parted,
+         util-linux,
+         xz-utils,
+         dmsetup,
+         dracut
+Description: KIWI - Dracut kiwi Library
+ This package contains a collection of methods to provide a library
+ for tasks done in other kiwi dracut modules
+
+Package: kiwi-dracut-oem-repart
+Architecture: any
+Depends: kiwi-dracut-lib
+Description: KIWI - Dracut module for oem(repart) image type
+ This package contains the kiwi-repart dracut module which is
+ used to repartition the oem disk image to the current disk
+ geometry according to the setup in the kiwi image configuration
+
+Package: kiwi-dracut-oem-dump
+Architecture: any
+Depends: kiwi-dracut-lib,
+         kexec-tools,
+         gawk,
+         kpartx
+Description: KIWI - Dracut module for oem(install) image type
+ This package contains the kiwi-dump and kiwi-dump-reboot dracut
+ modules which is used to install an oem image onto a target disk.
+ It implements a simple installer which allows for user selected
+ target disk or unattended installation to target. The source of
+ the image to install could be either from media(CD/DVD/USB) or
+ from remote
+
+Package: kiwi-dracut-live
+Architecture: any
+Depends: dialog,
+         xfsprogs,
+         e2fsprogs,
+         util-linux,
+         dmsetup,
+         dracut-network,
+         dracut,
+         xorriso,
+         parted
+Description: KIWI - Dracut module for iso(live) image type
+ This package contains the kiwi-live dracut module which is used
+ for booting iso(live) images built with KIWI
+
+Package: kiwi-dracut-overlay
+Architecture: any
+Depends: kiwi-dracut-lib
+Description: KIWI - Dracut module for vmx(+overlay) image type
+ This package contains the kiwi-overlay dracut module which is used
+ for booting vmx images built with KIWI and configured to use an
+ overlay root filesystem
