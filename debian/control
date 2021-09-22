@@ -95,3 +95,89 @@ Description: KIWI - Dracut module for vmx(+overlay) image type
  This package contains the kiwi-overlay dracut module which is used
  for booting vmx images built with KIWI and configured to use an
  overlay root filesystem
+
+Package: kiwi-systemdeps-core
+Architecture: any
+Depends: debootstrap,
+         gnupg,
+         mtools,
+         rsync,
+         tar (>= 1.2.7),
+         openssl,
+         ${misc:Depends}
+Description: KIWI - Core host system dependencies
+ This metapackage installs the necessary system dependencies
+ to run KIWI
+
+Package: kiwi-systemdeps-bootloaders
+Architecture: any
+Depends: grub2,
+         s390-tools [s390x],
+         kiwi-systemdeps-core,
+         ${misc:Depends}
+Description: KIWI - host requirements for configuring bootloaders
+ Host setup helper to pull in all packages required/useful on
+ the build host for configuring bootloaders on images
+
+Package: kiwi-systemdeps-containers
+Architecture: any
+Depends: buildah,
+         skopeo,
+         ${misc:Depends}
+Description: KIWI - host requirements for container images
+ Host setup helper to pull in all packages required/useful on
+ the build host to build container images e.g docker
+
+Package: kiwi-systemdeps-iso-media
+Architecture: any
+Depends: xorriso,
+         syslinux [amd64],
+         kiwi-systemdeps-core,
+         kiwi-systemdeps-filesystems,
+         kiwi-systemdeps-bootloaders,
+         ${misc:Depends}
+Description: KIWI - host requirements for live and install iso images
+ Host setup helper to pull in all packages required/useful on
+ the build host to build live and install iso images
+
+Package: kiwi-systemdeps-filesystems
+Architecture: any
+Depends: dosfstools,
+         e2fsprogs,
+         xfsprogs,
+         btrfs-progs,
+         gdisk,
+         squashfs-tools,
+         lvm2,
+         parted,
+         kpartx,
+         cryptsetup,
+         qemu-utils,
+         kiwi-systemdeps-core,
+         ${misc:Depends}
+Description: KIWI - host requirements for filesystems
+ Host setup helper to pull in all packages required/useful on
+ the build host to build filesystem images
+
+Package: kiwi-systemdeps-disk-images
+Architecture: any
+Depends: kiwi-systemdeps-filesystems,
+         kiwi-systemdeps-bootloaders,
+         kiwi-systemdeps-iso-media,
+         ${misc:Depends}
+Description: KIWI - host requirements for disk images
+ Host setup helper to pull in all packages required/useful on
+ the build host to build disk images
+
+Package: kiwi-systemdeps
+Architecture: any
+Depends: kiwi-systemdeps-core,
+         kiwi-systemdeps-bootloaders,
+         kiwi-systemdeps-filesystems,
+         kiwi-systemdeps-disk-images,
+         kiwi-systemdeps-containers,
+         kiwi-systemdeps-iso-media,
+         ${misc:Depends}
+Description: KIWI - Host system dependencies
+ Host setup helper to pull in all packages required/useful to
+ leverage all functionality in KIWI.
