@@ -102,9 +102,9 @@ Architecture: any
 Depends: debootstrap,
          gnupg,
          mtools,
+         openssl,
          rsync,
          tar (>= 1.2.7),
-         openssl,
          ${misc:Depends}
 Description: KIWI - Core host system dependencies
  This metapackage installs the necessary system dependencies
@@ -112,30 +112,25 @@ Description: KIWI - Core host system dependencies
 
 Package: kiwi-systemdeps-bootloaders
 Architecture: any
-Depends: grub2,
-         s390-tools [s390x],
-         kiwi-systemdeps-core,
-         ${misc:Depends}
+Depends: grub2, kiwi-systemdeps-core, s390-tools [s390x], ${misc:Depends}
 Description: KIWI - host requirements for configuring bootloaders
  Host setup helper to pull in all packages required/useful on
  the build host for configuring bootloaders on images
 
 Package: kiwi-systemdeps-containers
 Architecture: any
-Depends: buildah,
-         skopeo,
-         ${misc:Depends}
+Depends: buildah, skopeo, ${misc:Depends}
 Description: KIWI - host requirements for container images
  Host setup helper to pull in all packages required/useful on
  the build host to build container images e.g docker
 
 Package: kiwi-systemdeps-iso-media
 Architecture: any
-Depends: xorriso,
-         syslinux [amd64],
+Depends: kiwi-systemdeps-bootloaders,
          kiwi-systemdeps-core,
          kiwi-systemdeps-filesystems,
-         kiwi-systemdeps-bootloaders,
+         syslinux [amd64],
+         xorriso,
          ${misc:Depends}
 Description: KIWI - host requirements for live and install iso images
  Host setup helper to pull in all packages required/useful on
@@ -143,18 +138,18 @@ Description: KIWI - host requirements for live and install iso images
 
 Package: kiwi-systemdeps-filesystems
 Architecture: any
-Depends: dosfstools,
+Depends: btrfs-progs,
+         cryptsetup,
+         dosfstools,
          e2fsprogs,
-         xfsprogs,
-         btrfs-progs,
          gdisk,
-         squashfs-tools,
+         kiwi-systemdeps-core,
+         kpartx,
          lvm2,
          parted,
-         kpartx,
-         cryptsetup,
          qemu-utils,
-         kiwi-systemdeps-core,
+         squashfs-tools,
+         xfsprogs,
          ${misc:Depends}
 Description: KIWI - host requirements for filesystems
  Host setup helper to pull in all packages required/useful on
@@ -162,8 +157,8 @@ Description: KIWI - host requirements for filesystems
 
 Package: kiwi-systemdeps-disk-images
 Architecture: any
-Depends: kiwi-systemdeps-filesystems,
-         kiwi-systemdeps-bootloaders,
+Depends: kiwi-systemdeps-bootloaders,
+         kiwi-systemdeps-filesystems,
          kiwi-systemdeps-iso-media,
          ${misc:Depends}
 Description: KIWI - host requirements for disk images
@@ -172,11 +167,11 @@ Description: KIWI - host requirements for disk images
 
 Package: kiwi-systemdeps
 Architecture: any
-Depends: kiwi-systemdeps-core,
-         kiwi-systemdeps-bootloaders,
-         kiwi-systemdeps-filesystems,
-         kiwi-systemdeps-disk-images,
+Depends: kiwi-systemdeps-bootloaders,
          kiwi-systemdeps-containers,
+         kiwi-systemdeps-core,
+         kiwi-systemdeps-disk-images,
+         kiwi-systemdeps-filesystems,
          kiwi-systemdeps-iso-media,
          ${misc:Depends}
 Description: KIWI - Host system dependencies
