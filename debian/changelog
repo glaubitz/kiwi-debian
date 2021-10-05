@@ -1,3 +1,11 @@
+kiwi (9.23.62-1) unstable; urgency=medium
+
+  * Run wrap-and-sort
+  * Run wrap-and-sort
+  * New upstream version 9.23.62
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Tue, 05 Oct 2021 17:32:33 +0200
+
 kiwi (9.23.58-1) unstable; urgency=medium
 
   * Initial release (Closes: #994231)
