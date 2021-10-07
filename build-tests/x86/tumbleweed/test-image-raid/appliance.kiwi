@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<image schemaversion="7.4" name="kiwi-test-image-luks">
+<image schemaversion="7.4" name="kiwi-test-image-raid" displayname="Raid Disk">
     <description type="system">
         <author>Marcus Schäfer</author>
         <contact>ms@suse.com</contact>
-        <specification>Disk full encryption disk test build</specification>
+        <specification>Raid disk test build</specification>
     </description>
     <preferences>
-        <version>1.15.1</version>
+        <version>1.42.1</version>
         <packagemanager>zypper</packagemanager>
         <locale>en_US</locale>
         <keytable>us</keytable>
@@ -16,10 +16,20 @@
         <rpm-check-signatures>false</rpm-check-signatures>
         <bootsplash-theme>bgrt</bootsplash-theme>
         <bootloader-theme>openSUSE</bootloader-theme>
-        <type image="oem" filesystem="ext4" kernelcmdline="console=ttyS0" firmware="uefi" luks="linux" bootpartition="false">
+        <type image="oem" filesystem="ext4" kernelcmdline="splash" firmware="efi" mdraid="mirroring" installiso="true" installboot="install">
             <oemconfig>
-                <oem-resize>false</oem-resize>
+                <oem-device-filter>/dev/ram</oem-device-filter>
+                <oem-multipath-scan>false</oem-multipath-scan>
+                <oem-swap>true</oem-swap>
+                <oem-swapsize>2048</oem-swapsize>
+                <oem-systemsize>40960</oem-systemsize>
             </oemconfig>
+            <systemdisk name="vgsystem" preferlvm="true">
+                <volume freespace="5000M" name="srv"/>
+                <volume freespace="5000M" name="var"/>
+                <volume freespace="5000M" name="home"/>
+                <volume name="@root" size="20000M"/>
+            </systemdisk>
             <bootloader name="grub2" console="serial" timeout="10"/>
         </type>
     </preferences>
@@ -56,7 +66,9 @@
         <package name="kernel-default"/>
         <package name="shim"/>
         <package name="timezone"/>
-        <package name="cryptsetup"/>
+        <package name="dracut-kiwi-oem-repart"/>
+        <package name="dracut-kiwi-oem-dump"/>
+        <package name="mdadm"/>
     </packages>
     <packages type="bootstrap">
         <package name="gawk"/>
