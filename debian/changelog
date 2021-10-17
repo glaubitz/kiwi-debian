@@ -1,20 +1,5 @@
-kiwi (9.24.0-1) UNRELEASED; urgency=medium
+kiwi (9.24.1-1) unstable; urgency=medium
 
-  * New upstream version 9.24.0
-  * New upstream version 9.24.0
+  * New upstream release
 
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Thu, 07 Oct 2021 11:51:22 +0200
-
-kiwi (9.23.62-1) unstable; urgency=medium
-
-  * Run wrap-and-sort
-  * Run wrap-and-sort
-  * New upstream version 9.23.62
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Tue, 05 Oct 2021 17:32:33 +0200
-
-kiwi (9.23.58-1) unstable; urgency=medium
-
-  * Initial release (Closes: #994231)
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Mon, 04 Oct 2021 18:51:26 +0200
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 17 Oct 2021 20:48:10 +0200
