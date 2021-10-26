@@ -1,3 +1,11 @@
+kiwi (9.24.2-1) unstable; urgency=medium
+
+  * Add python3-simplejson to Build-Depends in debian/control
+  * Add python3-simplejson to Build-Depends in debian/control
+  * New upstream version 9.24.2
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Tue, 26 Oct 2021 16:05:15 +0200
+
 kiwi (9.24.1-1) unstable; urgency=medium
 
   * New upstream release
