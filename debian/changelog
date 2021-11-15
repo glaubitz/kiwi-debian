@@ -1,3 +1,9 @@
+kiwi (9.24.6-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Mon, 15 Nov 2021 20:08:06 +0100
+
 kiwi (9.24.2-1) unstable; urgency=medium
 
   * Add python3-simplejson to Build-Depends in debian/control
