@@ -54,7 +54,7 @@ Depends: bc,
          ${misc:Depends}
 Description: KIWI - Dracut kiwi Library
  This package contains a collection of methods to provide a library
- for tasks done in other kiwi dracut modules
+ for tasks done in other kiwi dracut modules.
 
 Package: kiwi-dracut-oem-repart
 Architecture: any
@@ -62,7 +62,7 @@ Depends: kiwi-dracut-lib, ${misc:Depends}
 Description: KIWI - Dracut module for oem(repart) image type
  This package contains the kiwi-repart dracut module which is
  used to repartition the oem disk image to the current disk
- geometry according to the setup in the kiwi image configuration
+ geometry according to the setup in the kiwi image configuration.
 
 Package: kiwi-dracut-oem-dump
 Architecture: any
@@ -72,8 +72,8 @@ Description: KIWI - Dracut module for oem(install) image type
  modules which is used to install an oem image onto a target disk.
  It implements a simple installer which allows for user selected
  target disk or unattended installation to target. The source of
- the image to install could be either from media(CD/DVD/USB) or
- from remote
+ the image to install could be either from media (CD/DVD/USB) or
+ from remote.
 
 Package: kiwi-dracut-live
 Architecture: any
@@ -87,16 +87,16 @@ Depends: dialog,
          xorriso,
          ${misc:Depends}
 Description: KIWI - Dracut module for iso(live) image type
- This package contains the kiwi-live dracut module which is used
- for booting iso(live) images built with KIWI
+ This package contains the kiwi-live dracut module which is
+ used for booting ISO (live) images built with KIWI.
 
 Package: kiwi-dracut-overlay
 Architecture: any
 Depends: kiwi-dracut-lib, ${misc:Depends}
-Description: KIWI - Dracut module for vmx(+overlay) image type
- This package contains the kiwi-overlay dracut module which is used
- for booting vmx images built with KIWI and configured to use an
- overlay root filesystem
+Description: KIWI - Dracut module for VMX (+overlay) image type
+ This package contains the kiwi-overlay dracut module which is
+ used for booting VMX images built with KIWI and configured to
+ use an overlay root filesystem.
 
 Package: kiwi-systemdeps-core
 Architecture: any
@@ -108,8 +108,8 @@ Depends: debootstrap,
          tar (>= 1.2.7),
          ${misc:Depends}
 Description: KIWI - Core host system dependencies
- This metapackage installs the necessary system dependencies
- to run KIWI
+ This meta-package installs the necessary system dependencies
+ to run KIWI.
 
 Package: kiwi-systemdeps-bootloaders
 Architecture: any
@@ -122,8 +122,9 @@ Package: kiwi-systemdeps-containers
 Architecture: any
 Depends: buildah, skopeo, ${misc:Depends}
 Description: KIWI - host requirements for container images
- Host setup helper to pull in all packages required/useful on
- the build host to build container images e.g docker
+ Host setup helper to pull in all packages which are required
+ or useful on the build host to build container images such
+ as docker.
 
 Package: kiwi-systemdeps-iso-media
 Architecture: any
@@ -134,8 +135,8 @@ Depends: kiwi-systemdeps-bootloaders,
          xorriso,
          ${misc:Depends}
 Description: KIWI - host requirements for live and install iso images
- Host setup helper to pull in all packages required/useful on
- the build host to build live and install iso images
+ Host setup helper to pull in all packages which are required or
+ useful on the build host to build live and install iso images.
 
 Package: kiwi-systemdeps-filesystems
 Architecture: any
@@ -153,8 +154,8 @@ Depends: btrfs-progs,
          xfsprogs,
          ${misc:Depends}
 Description: KIWI - host requirements for filesystems
- Host setup helper to pull in all packages required/useful on
- the build host to build filesystem images
+ Host setup helper to pull in all packages which are required or
+ useful on the build host to build filesystem images.
 
 Package: kiwi-systemdeps-disk-images
 Architecture: any
@@ -163,8 +164,8 @@ Depends: kiwi-systemdeps-bootloaders,
          kiwi-systemdeps-iso-media,
          ${misc:Depends}
 Description: KIWI - host requirements for disk images
- Host setup helper to pull in all packages required/useful on
- the build host to build disk images
+ Host setup helper to pull in all packages which are required
+ or useful on the build host to build disk images.
 
 Package: kiwi-systemdeps
 Architecture: any
@@ -176,5 +177,5 @@ Depends: kiwi-systemdeps-bootloaders,
          kiwi-systemdeps-iso-media,
          ${misc:Depends}
 Description: KIWI - Host system dependencies
- Host setup helper to pull in all packages required/useful to
- leverage all functionality in KIWI.
+ Host setup helper to pull in all packages which are required
+ or useful to leverage all functionality in KIWI.
