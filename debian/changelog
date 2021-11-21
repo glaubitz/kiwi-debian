@@ -1,25 +1,5 @@
-kiwi (9.24.7-1) UNRELEASED; urgency=medium
+kiwi (9.24.7-1) unstable; urgency=medium
 
-  * New upstream version 9.24.7
+  * Initial release (Closes: #994231)
 
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 21 Nov 2021 19:20:07 +0100
-
-kiwi (9.24.6-1) unstable; urgency=medium
-
-  * New upstream release
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Mon, 15 Nov 2021 20:08:06 +0100
-
-kiwi (9.24.2-1) unstable; urgency=medium
-
-  * Add python3-simplejson to Build-Depends in debian/control
-  * Add python3-simplejson to Build-Depends in debian/control
-  * New upstream version 9.24.2
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Tue, 26 Oct 2021 16:05:15 +0200
-
-kiwi (9.24.1-1) unstable; urgency=medium
-
-  * New upstream release
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 17 Oct 2021 20:48:10 +0200
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 21 Nov 2021 21:56:44 +0100
