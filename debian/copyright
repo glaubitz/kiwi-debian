@@ -29,6 +29,7 @@ License: GPL-3+
 
 Files: debian/*
 Copyright: 2021 John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+           2021 Marcus Schäfer <marcus.schaefer@gmail.com>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
