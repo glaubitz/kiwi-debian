@@ -31,7 +31,10 @@ Architecture: any
 Depends: ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends},
-         ${sphinxdoc:Depends}
+         ${sphinxdoc:Depends},
+         debootstrap,
+         tar,
+         screen
 Description: Flexible OS Image and Appliance Builder
  The KIWI Image System provides an operating system image builder
  for Linux supported hardware platforms as well as for virtualization
