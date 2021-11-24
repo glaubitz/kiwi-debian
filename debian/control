@@ -33,7 +33,6 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
          ${sphinxdoc:Depends},
          debootstrap,
-         tar (>= 1.2.7),
          screen
 Description: Flexible OS Image and Appliance Builder
  The KIWI Image System provides an operating system image builder
