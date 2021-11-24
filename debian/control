@@ -31,7 +31,9 @@ Architecture: any
 Depends: ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends},
-         ${sphinxdoc:Depends}
+         ${sphinxdoc:Depends},
+         debootstrap,
+         screen
 Description: Flexible OS Image and Appliance Builder
  The KIWI Image System provides an operating system image builder
  for Linux supported hardware platforms as well as for virtualization
@@ -100,12 +102,10 @@ Description: KIWI - Dracut module for VMX (+overlay) image type
 
 Package: kiwi-systemdeps-core
 Architecture: any
-Depends: debootstrap,
-         gnupg,
+Depends: gnupg,
          mtools,
          openssl,
          rsync,
-         tar (>= 1.2.7),
          ${misc:Depends}
 Description: KIWI - Core host system dependencies
  This meta-package installs the necessary system dependencies
