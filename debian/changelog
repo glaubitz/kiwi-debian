@@ -1,22 +1,5 @@
-kiwi (9.24.11-1) UNRELEASED; urgency=medium
-
-  [ John Paul Adrian Glaubitz ]
-  * Finalize debian/changelog
-  * Improve descriptions in debian/control
-  * Add Marcus Schäfer authorship for debian files in debian/control
-
-  [ Marcus Schäfer ]
-  * Update list of main package requirements
-  * consolidate requirements
-  * no tar in requires, because it's essential anyway
-
-  [ John Paul Adrian Glaubitz ]
-  * New upstream version 9.24.11
-
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Thu, 25 Nov 2021 12:59:21 +0100
-
-kiwi (9.24.7-1) unstable; urgency=medium
+kiwi (9.24.11-1) unstable; urgency=medium
 
   * Initial release (Closes: #994231)
 
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 21 Nov 2021 21:56:44 +0100
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Thu, 25 Nov 2021 12:59:53 +0100
