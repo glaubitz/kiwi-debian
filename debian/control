@@ -28,12 +28,12 @@ Rules-Requires-Root: no
 
 Package: kiwi
 Architecture: any
-Depends: ${misc:Depends},
+Depends: debootstrap,
+         screen,
+         ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends},
-         ${sphinxdoc:Depends},
-         debootstrap,
-         screen
+         ${sphinxdoc:Depends}
 Description: Flexible OS Image and Appliance Builder
  The KIWI Image System provides an operating system image builder
  for Linux supported hardware platforms as well as for virtualization
@@ -102,11 +102,7 @@ Description: KIWI - Dracut module for VMX (+overlay) image type
 
 Package: kiwi-systemdeps-core
 Architecture: any
-Depends: gnupg,
-         mtools,
-         openssl,
-         rsync,
-         ${misc:Depends}
+Depends: gnupg, mtools, openssl, rsync, ${misc:Depends}
 Description: KIWI - Core host system dependencies
  This meta-package installs the necessary system dependencies
  to run KIWI.
