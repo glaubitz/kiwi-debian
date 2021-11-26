@@ -410,6 +410,7 @@ test/data/example_disk_size_volume_config.xml
 test/data/example_disk_size_volume_too_small_config.xml
 test/data/example_dot_profile_config.xml
 test/data/example_include_config.xml
+test/data/example_include_config_from_description_dir.xml
 test/data/example_include_config_missing_reference.xml
 test/data/example_lvm_custom_rootvol_config.xml
 test/data/example_lvm_default_config.xml
@@ -429,8 +430,10 @@ test/data/example_runtime_checker_conflicting_types.xml
 test/data/example_runtime_checker_include_nested_reference.xml
 test/data/example_runtime_checker_no_boot_reference.xml
 test/data/example_runtime_checker_no_initrd_system_reference.xml
+test/data/example_this_path_config.xml
 test/data/fstab
 test/data/gz_data.gz
+test/data/include.xml
 test/data/include_repo.xml
 test/data/info.xml
 test/data/iso_listing.txt
