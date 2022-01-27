@@ -242,26 +242,30 @@ class SystemSetup:
         """
         Setup systemd machine id
 
-        Empty out the machine id which was provided by the package
-        installation process. This will instruct the dracut initrd
-        code to create a new machine id. This way a golden image
-        produces unique machine id's on first deployment and boot
-        of the image.
+        There are various states of /etc/machine-id:
 
-        Note: Requires dracut connected image type
+        a) Does not exist: Triggers ConditionFirstBoot, but does not work
+           if the filesystem is initially read-only (booted without "rw").
+        b) Exists, is empty: Does not trigger ConditionFirstBoot, but works
+           with read-only mounts.
+        c) Exists, contains the string "uninitialized": Same as b), but
+           triggers ConditionFirstBoot. Supported by systemd v247+ only.
+        d) Exists, contains a valid ID.
 
-        This method must only be called if the image is of
-        a type which gets booted via a dracut created initrd.
-        Deleting the machine-id without the dracut initrd
-        creating a new one produces an inconsistent system
+        See the machine-id(5) man page for details.
+
+        In images, d) is not desirable, so truncate the file. This is the
+        previous behaviour and what existing images expect. If the image
+        has one of the other states, keep it as-is.
         """
         machine_id = os.path.join(
             self.root_dir, 'etc', 'machine-id'
         )
 
         if os.path.exists(machine_id):
-            with open(machine_id, 'w'):
-                pass
+            with open(machine_id, 'r+') as f:
+                if 'uninitialized' not in f.read():
+                    f.truncate(0)
 
     def setup_permissions(self) -> None:
         """
@@ -476,7 +480,7 @@ class SystemSetup:
         Command.run(
             [
                 'chroot', self.root_dir,
-                'setfiles', security_context_file, '/', '-v'
+                'setfiles', security_context_file, '/', '-v', '-F'
             ]
         )
 
@@ -998,10 +1002,8 @@ class SystemSetup:
         script_path = os.path.join(self.root_dir, 'image', name)
         if os.path.exists(script_path):
             options = option_list or []
-            if log.getLogLevel() == logging.DEBUG and not \
-               Defaults.is_buildservice_worker():
-                # In debug mode run scripts in a screen session to
-                # allow attaching and debugging
+            if log.getLogFlags().get('run-scripts-in-screen'):
+                # Run scripts in a screen session if requested
                 command = ['screen', '-t', '-X', 'chroot', self.root_dir]
             else:
                 # In standard mode run scripts without a terminal
@@ -1039,10 +1041,8 @@ class SystemSetup:
                 'cd', working_directory, '&&',
                 'bash', '--norc', script_path, ' '.join(option_list)
             ]
-            if log.getLogLevel() == logging.DEBUG and not \
-               Defaults.is_buildservice_worker():
-                # In debug mode run scripts in a screen session to
-                # allow attaching and debugging
+            if log.getLogFlags().get('run-scripts-in-screen'):
+                # Run scripts in a screen session if requested
                 config_script = Command.call(
                     ['screen', '-t', '-X', 'bash', '-c', ' '.join(bash_command)]
                 )

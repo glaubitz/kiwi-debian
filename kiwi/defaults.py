@@ -1195,6 +1195,7 @@ class Defaults:
             'ppc64': 'ofw',
             'ppc64le': 'ofw',
             'arm64': 'efi',
+            'aarch64': 'efi',
             'armv5el': 'efi',
             'armv5tel': 'efi',
             'armv6hl': 'efi',
@@ -1632,13 +1633,13 @@ class Defaults:
     @staticmethod
     def get_container_compression():
         """
-        Provides default container compression algorithm
+        Provides default container compression
 
-        :return: name
+        :return: True
 
-        :rtype: str
+        :rtype: bool
         """
-        return 'xz'
+        return True
 
     @staticmethod
     def get_default_container_name():

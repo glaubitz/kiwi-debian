@@ -289,6 +289,22 @@ bootloader has theme support.
 Along with the version and the packagemanager at least one image type
 element must be specified to indicate which image type should be build.
 
+<preferences><release-version>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Specifies the distribution global release version as consumed
+by package managers. Currently the release version is not set or
+set to `0` for package managers which requires a value to operate.
+With the optional `release-version` section, users have an
+opportunity to specify a custom value which is passed along the package
+manager to define the distribution release.
+
+.. note::
+
+   The release version information is currently
+   used in dnf and microdnf package managers only. It might
+   happen that it gets applied to the other package manager
+   backends as well. This will happen on demand though.
+
 <preferences><type>
 ~~~~~~~~~~~~~~~~~~~
 At least one type element must be configured. It is possible to
@@ -693,10 +709,107 @@ publisher="string":
 The following sections shows the supported child elements of the `type`
 element including references to their usage in a detailed type setup:
 
+.. _preferences-type-bootloader:
+
 <preferences><type><bootloader>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Used to describe the bootloader setup in the oem disk image type.
-For details see: :ref:`disk-bootloader`
+The `bootloader` element is used to select the bootloader. At the moment,
+`grub2`, `isolinux`, `zipl` and `grub2_s390x_emu` (a combination of zipl
+and a userspace GRUB2) are supported. The special `custom` entry allows
+to skip the bootloader configuration and installation and leaves this up
+to the user, which can be done by using the `editbootinstall` and
+`editbootconfig` custom scripts.
+
+In addition to the mandatory name attribute, the following optional
+attributes are supported:
+
+console="console|gfxterm|serial":
+  Specifies the bootloader console. The attribute is available for the
+  grub and isolinux bootloader types. By default, a graphics console
+  setup is used.
+
+grub_template="filename":
+  Specifies a custom grub bootloader template file which will be used
+  instead of the one provided with Kiwi. A static bootloader template to
+  create the grub config file is only used in Kiwi if the native method
+  via the grub mkconfig toolchain does not work properly. As of today,
+  this is only the case for live and install ISO images. Thus, this
+  setting only affects the oem and iso image types.
+
+  The template file should contain a `Template string
+  <https://docs.python.org/3.4/library/string.html#template-strings>`_
+  and can use the following variables:
+
+  +-----------------------+----------------------------------------------+
+  | Variable              | Description                                  |
+  +=======================+==============================================+
+  | search_params         | parameters needed for grub's `search`        |
+  |                       | command to locate the root volume            |
+  +-----------------------+----------------------------------------------+
+  | default_boot          | number of the default menu item to boot      |
+  +-----------------------+----------------------------------------------+
+  | kernel_file           | the name of the kernel file                  |
+  +-----------------------+----------------------------------------------+
+  | initrd_file           | the name of the initial ramdisk file         |
+  +-----------------------+----------------------------------------------+
+  | boot_options          | kernel command line options for booting      |
+  |                       | normally                                     |
+  +-----------------------+----------------------------------------------+
+  | failsafe_boot_options | kernel command line options for booting in   |
+  |                       | failsafe mode                                |
+  +-----------------------+----------------------------------------------+
+  | gfxmode               | the resolution to use for the bootloader;    |
+  |                       | passed to grub's `gfxmode` command           |
+  +-----------------------+----------------------------------------------+
+  | theme                 | the name of a graphical theme to use         |
+  +-----------------------+----------------------------------------------+
+  | boot_timeout          | the boot menu timeout, set by the `timeout`  |
+  |                       | attribute                                    |
+  +-----------------------+----------------------------------------------+
+  | boot_timeout_style    | the boot timeout style, set by the           |
+  |                       | `timeout_style` attribute                    |
+  +-----------------------+----------------------------------------------+
+  | serial_line_setup     | directives used to initialize the serial     |
+  |                       | port, set by the `serial_line` attribute     |
+  +-----------------------+----------------------------------------------+
+  | title                 | a title for the image: this will be the      |
+  |                       | `<image>` tag's `displayname` attribute or   |
+  |                       | its `name` attribute if `displayname` is not |
+  |                       | set; see: :ref:`sec.image`                   |
+  +-----------------------+----------------------------------------------+
+  | bootpath              | the bootloader lookup path                   |
+  +-----------------------+----------------------------------------------+
+  | boot_directory_name   | the name of the grub directory               |
+  +-----------------------+----------------------------------------------+
+  | efi_image_name        | architecture-specific EFI boot binary name   |
+  +-----------------------+----------------------------------------------+
+  | terminal_setup        | the bootloader console mode, set by the      |
+  |                       | `console` attribute                          |
+  +-----------------------+----------------------------------------------+
+
+serial_line="string":
+  Specifies the bootloader serial line setup. The setup is effective if
+  the bootloader console is set to use the serial line. The attribute is
+  available for the grub bootloader only.
+
+timeout="number":
+  Specifies the boot timeout in seconds prior to launching the default
+  boot option. By default, the timeout is set to 10 seconds. It makes
+  sense to set this value to `0` for images intended to be started
+  non-interactively (e.g. virtual machines).
+
+timeout_style="countdown|hidden":
+  Specifies the boot timeout style to control the way in which the timeout
+  interacts with displaying the menu. If set, the display of the
+  bootloader menu is delayed after the timeout expired. In countdown mode,
+  an indication of the remaining time is displayed. The attribute is
+  available for the grub loader only.
+
+targettype="CDL|LDL|FBA|SCSI":
+  Specifies the device type of the disk zipl should boot.
+  On zFCP devices, use `SCSI`; on DASD devices, use `CDL` or `LDL`; on
+  emulated DASD devices, use `FBA`. The attribute is available for the
+  zipl loader only.
 
 <preferences><type><containerconfig>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1011,7 +1124,7 @@ any of its required packages and any recommended packages.
 
 .. note:: Collections on SUSE
 
-   On SUSE based distributions collections are names patterns and are
+   On SUSE based distributions collections are called `patterns` and are
    just simple packages. To get the names of the patterns such that
    they can be used in a namedCollection type the following command:
    `$ zypper patterns`. If for some reason the collection name cannot
@@ -1023,10 +1136,41 @@ any of its required packages and any recommended packages.
 
 .. note:: Collections on RedHat
 
-   On RedHat based distributions collections are named groups and are
+   On RedHat based distributions collections are called `groups` and are
    extra metadata. To get the names of these groups type the following
    command: `$ dnf group list`. Please note that group names are allowed
    to contain whitespace characters.
+
+<packages><collectionModule>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code:: xml
+
+   <packages type="bootstrap">
+       <collectionModule name="module" stream="stream" enable="true|false"/>
+   </packages>
+
+In CentOS Stream >= 8 and Red Hat Enterprise Linux >= 8, there are
+Application Streams that are offered in the form of modules
+(using Fedora Modularity technology). To build images that use
+this content {kiwi} offers to enable/disable modules when using
+the `dnf` or `microdnf` package manager backend. Modules are setup
+prior the bootstrap phase and its setup persists as part of the
+image.
+
+There are the following constraints when adding `collectionModule`
+elements:
+
+* `collectionModule` elements can only be specified as part of the
+  `<packages type="bootstrap">` section. This is because the setup of
+  modules must be done once and as early as possible in the process
+  of installing the image root tree.
+
+* Disabling a module can only be done as a whole and therefore the
+  `stream` attribute is not allowed for disabling modules. For
+  enabling modules the stream` attribute is optional
+
+* The `enable` attribute is mandatory because it should be an explicit
+  setting if a module is effectively used or not.
 
 <packages><archive>
 ~~~~~~~~~~~~~~~~~~~

@@ -94,7 +94,10 @@ doc/source/image_description/elements.rst
 doc/source/overview/workflow.rst
 doc/source/plugins/self_contained.rst
 doc/source/plugins/stackbuild.rst
+doc/source/troubleshooting/architectures.rst
+doc/source/troubleshooting/buildhost_constraints.rst
 doc/source/troubleshooting/filesystems.rst
+doc/source/troubleshooting/security.rst
 doc/source/working_with_images/build_in_buildservice.rst
 doc/source/working_with_images/build_with_profiles.rst
 doc/source/working_with_images/custom_fstab_extension.rst
@@ -152,6 +155,7 @@ helper/completion_generator.py
 helper/install_devel_packages.sh
 helper/rebuild_changelog_reference.sh
 helper/update_changelog.py
+helper/update_obs_services.sh
 kiwi/__init__.py
 kiwi/api_helper.py
 kiwi/app.py
@@ -462,6 +466,7 @@ test/data/oemboot/example-distribution/config.xml
 test/data/root-dir/boot/unicode.pf2
 test/data/root-dir/image/config.xml
 test/data/root-dir/image/exclude_files.yaml
+test/scripts/__init__.py
 test/scripts/conftest.py
 test/scripts/test_baseVagrantSetup.py
 test/scripts/test_suseSetupProduct.py

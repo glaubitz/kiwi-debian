@@ -30,12 +30,19 @@ class TestPackageManagerBase:
         with raises(NotImplementedError):
             self.manager.request_package_exclusion('name')
 
+    def test_setup_repository_modules(self):
+        with raises(NotImplementedError):
+            self.manager.setup_repository_modules({})
+
     def test_process_install_requests_bootstrap(self):
         with raises(NotImplementedError):
             self.manager.process_install_requests_bootstrap()
 
     def test_post_process_install_requests_bootstrap(self):
         self.manager.post_process_install_requests_bootstrap()
+
+    def test_post_process_delete_requests(self):
+        self.manager.post_process_delete_requests()
 
     def test_process_install_requests(self):
         with raises(NotImplementedError):

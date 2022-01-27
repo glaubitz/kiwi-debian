@@ -27,7 +27,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "KIWI" "8" "Nov 26, 2021" "9.24.12" "KIWI NG"
+.TH "KIWI" "8" "Jan 25, 2022" "9.24.19" "KIWI NG"
 .SH NAME
 kiwi \- Creating Operating System Images
 .SH SYNOPSIS
@@ -44,10 +44,13 @@ kiwi\-ng [\-\-profile=<name>...]
         [\-\-type=<build_type>]
         [\-\-logfile=<filename>]
         [\-\-debug]
+        [\-\-debug\-run\-scripts\-in\-screen]
         [\-\-color\-output]
         [\-\-config=<configfile>]
+        [\-\-kiwi\-file=<kiwifile>]
     image <command> [<args>...]
 kiwi\-ng [\-\-debug]
+        [\-\-debug\-run\-scripts\-in\-screen]
         [\-\-color\-output]
         [\-\-config=<configfile>]
     result <command> [<args>...]
@@ -58,8 +61,10 @@ kiwi\-ng [\-\-profile=<name>...]
         [\-\-type=<build_type>]
         [\-\-logfile=<filename>]
         [\-\-debug]
+        [\-\-debug\-run\-scripts\-in\-screen]
         [\-\-color\-output]
         [\-\-config=<configfile>]
+        [\-\-kiwi\-file=<kiwifile>]
     system <command> [<args>...]
 kiwi\-ng compat <legacy_args>...
 kiwi\-ng \-v | \-\-version
@@ -125,6 +130,9 @@ or \fB/etc/kiwi.yml\fP
 .B  \-\-debug
 Print debug information on the commandline.
 .TP
+.B  \-\-debug\-run\-scripts\-in\-screen
+Run scripts called by kiwi in a screen session.
+.TP
 .BI \-\-logfile\fB= <filename>
 Specify log file. the logfile contains detailed information about
 the process. The special call: \fB\-\-logfile stdout\fP sends all
@@ -159,6 +167,11 @@ and not a responsibility of KIWI NG.
 .BI \-\-type\fB= <build_type>
 Select image build type. The specified build type must be configured
 as part of the XML description.
+.TP
+.BI \-\-kiwi\-file\fB= <kiwifile>
+Basename of kiwi file which contains the main image
+configuration elements. If not specified kiwi searches for
+a file named \fBconfig.xml\fP or a file matching \fB*.kiwi\fP
 .TP
 .B  \-\-version
 Show program version

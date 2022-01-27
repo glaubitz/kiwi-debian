@@ -99,6 +99,9 @@ class TestXMLState:
     def test_get_package_manager(self):
         assert self.state.get_package_manager() == 'zypper'
 
+    def get_release_version(self):
+        assert self.state.get_release_version() == '15.3'
+
     @patch('kiwi.xml_state.XMLState.get_preferences_sections')
     def test_get_default_package_manager(self, mock_preferences):
         mock_preferences.return_value = []
@@ -666,10 +669,14 @@ class TestXMLState:
         )
         boot_state = XMLState(boot_description.load(), ['std'])
         self.state.copy_bootincluded_packages(boot_state)
-        image_packages = boot_state.get_system_packages()
-        assert 'plymouth-branding-openSUSE' in image_packages
-        assert 'grub2-branding-openSUSE' in image_packages
-        assert 'gfxboot-branding-openSUSE' in image_packages
+        image_packages = boot_state.get_image_packages_sections()
+        bootstrap_packages = boot_state.get_bootstrap_packages()
+        assert 'plymouth-branding-openSUSE' in bootstrap_packages
+        assert 'grub2-branding-openSUSE' in bootstrap_packages
+        assert 'gfxboot-branding-openSUSE' in bootstrap_packages
+        assert 'plymouth-branding-openSUSE' not in image_packages
+        assert 'grub2-branding-openSUSE' not in image_packages
+        assert 'gfxboot-branding-openSUSE' not in image_packages
         to_delete_packages = boot_state.get_to_become_deleted_packages()
         assert 'gfxboot-branding-openSUSE' not in to_delete_packages
 
@@ -1021,3 +1028,9 @@ class TestXMLState:
         state = XMLState(xml_data)
         assert state.xml_data.get_repository()[0].get_source().get_path() \
             == 'dir://{0}/my_repo'.format(os.path.realpath('../data'))
+
+    def test_get_collection_modules(self):
+        assert self.state.get_collection_modules() == {
+            'disable': ['mod_c'],
+            'enable': ['mod_a:stream', 'mod_b']
+        }

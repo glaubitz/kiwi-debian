@@ -363,6 +363,53 @@ div {
         }
 }
 
+
+#==========================================
+# common element <collectionModule>
+#
+div {
+    sch:pattern [
+        id = "collection_module_scope"
+        sch:rule [
+            context = "collectionModule"
+            sch:assert [
+                test = "../@type='bootstrap'"
+                "collectionModule is only available in the bootstrap "~
+                "packages section"
+            ]
+        ]
+    ]
+    sch:pattern [
+        id = "collection_module_disable_constraint"
+        sch:rule [
+            context = "collectionModule"
+            sch:assert [
+                test = "@enable='true' or not(@stream)"
+                "@stream attribute is not allowed to disable a module"
+            ]
+        ]
+    ]
+    k.collectionModule.name.attribute =
+        attribute name { safe-posix-name }
+    k.collectionModule.stream.attribute =
+        attribute stream { safe-posix-name }
+    k.collectionModule.arch.attribute = k.arch.attribute
+    k.collectionModule.enable.attribute =
+        ## Specify the module to become enabled (for the optionally
+        ## given stream) or disabled.
+        attribute enable { xsd:boolean }
+    k.collectionModule.attlist =
+        k.collectionModule.name.attribute &
+        k.collectionModule.enable.attribute &
+        k.collectionModule.stream.attribute? &
+        k.collectionModule.arch.attribute?
+    k.collectionModule =
+        element collectionModule {
+            k.collectionModule.attlist,
+            empty
+        }
+}
+
 #==========================================
 # common element <oem-boot-title>
 #
@@ -845,6 +892,20 @@ div {
         element packagemanager {
             k.packagemanager.attlist,
             k.packagemanager.content
+        }
+}
+
+#==========================================
+# common element <release-version>
+#
+div {
+    k.release-version.content = text
+    k.release-version.attlist = empty
+    k.release-version =
+        ## Name of the Package Manager
+        element release-version {
+            k.release-version.attlist,
+            k.release-version.content
         }
 }
 
@@ -1482,10 +1543,12 @@ div {
         ## systems like efi, coreboot, etc.. This attribute is
         ## used to differentiate the image according to the firmware
         ## which boots up the system. It mostly has an impact on
-        ## the disk layout and the partition table type. By default
-        ## the standard x86 bios firmware setup is used
+        ## the disk layout and the partition table type. The default
+        ## firmware setting is based on the architecture. If no
+        ## action should be taken on behalf of a firmware setting
+        ## or kiwi's default selection, set the firmware to: custom
         attribute firmware {
-            "bios" | "ec2" | "efi" | "uefi" | "ofw" | "opal"
+            "bios" | "ec2" | "efi" | "uefi" | "ofw" | "opal" | "custom"
         }
         >> sch:pattern [ id = "firmware" is-a = "image_type"
             sch:param [ name = "attr" value = "firmware" ]
@@ -2314,6 +2377,18 @@ div {
             sch:param [ name = "attr" value = "name" ]
             sch:param [ name = "types" value = "oem iso" ]
         ]
+    k.bootloader.grub_template.attribute =
+        ## Specifies a custom grub bootloader template file which will be used
+        ## instead of the one provided with Kiwi. A static bootloader template to
+        ## create the grub config file is only used in Kiwi if the native method
+        ## via the grub mkconfig toolchain does not work properly. As of today,
+        ## this is only the case for live and install ISO images. Thus, this
+        ## setting only affects the oem and iso image types.
+        attribute grub_template { text }
+        >> sch:pattern [ id = "loader_grub_template" is-a = "bootloader_image_type"
+            sch:param [ name = "attr" value = "grub_template" ]
+            sch:param [ name = "types" value = "oem iso" ]
+        ]
     k.bootloader.console.attribute =
         ## Specifies the bootloader console.
         ## The value is available for grub and isolinux bootloader
@@ -2372,7 +2447,8 @@ div {
         k.bootloader.serial_line.attribute? &
         k.bootloader.timeout.attribute? &
         k.bootloader.timeout_style.attribute? &
-        k.bootloader.targettype.attribute?
+        k.bootloader.targettype.attribute? &
+        k.bootloader.grub_template.attribute?
 
     k.bootloader =
         ## The bootloader section is used to select the bootloader
@@ -2985,6 +3061,7 @@ div {
             k.archive* &
             k.ignore* &
             k.namedCollection* &
+            k.collectionModule* &
             k.product* &
             k.package*
         }
@@ -3011,6 +3088,7 @@ div {
             k.keytable? &
             k.locale? &
             k.packagemanager? &
+            k.release-version? &
             k.rpm-locale-filtering? &
             k.rpm-check-signatures? &
             k.rpm-excludedocs? &

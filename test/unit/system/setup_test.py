@@ -706,7 +706,7 @@ class TestSystemSetup:
         )
 
     @patch('kiwi.system.setup.Defaults.is_buildservice_worker')
-    @patch('kiwi.logger.Logger.getLogLevel')
+    @patch('kiwi.logger.Logger.getLogFlags')
     @patch('kiwi.system.setup.Profile')
     @patch('kiwi.command.Command.call')
     @patch('kiwi.command_process.CommandProcess.poll_and_watch')
@@ -716,11 +716,13 @@ class TestSystemSetup:
     @patch('copy.deepcopy')
     def test_call_disk_script(
         self, mock_copy_deepcopy, mock_access, mock_stat, mock_os_path,
-        mock_watch, mock_command, mock_Profile, mock_getLogLevel,
+        mock_watch, mock_command, mock_Profile, mock_getLogFlags,
         mock_is_buildservice_worker
     ):
         mock_is_buildservice_worker.return_value = False
-        mock_getLogLevel.return_value = logging.DEBUG
+        mock_getLogFlags.return_value = {
+            'run-scripts-in-screen': True
+        }
         mock_copy_deepcopy.return_value = {}
         profile = Mock()
         mock_Profile.return_value = profile
@@ -796,17 +798,19 @@ class TestSystemSetup:
         ])
 
     @patch('kiwi.system.setup.Defaults.is_buildservice_worker')
-    @patch('kiwi.logger.Logger.getLogLevel')
+    @patch('kiwi.logger.Logger.getLogFlags')
     @patch('kiwi.command.Command.call')
     @patch('kiwi.command_process.CommandProcess.poll_and_watch')
     @patch('os.path.exists')
     @patch('os.path.abspath')
     def test_call_edit_boot_install_script(
         self, mock_abspath, mock_exists, mock_watch, mock_command,
-        mock_getLogLevel, mock_is_buildservice_worker
+        mock_getLogFlags, mock_is_buildservice_worker
     ):
         mock_is_buildservice_worker.return_value = False
-        mock_getLogLevel.return_value = logging.DEBUG
+        mock_getLogFlags.return_value = {
+            'run-scripts-in-screen': True
+        }
         result_type = namedtuple(
             'result_type', ['stderr', 'returncode']
         )
@@ -1074,17 +1078,41 @@ class TestSystemSetup:
 
     @patch('kiwi.system.setup.os.path.exists')
     def test_setup_machine_id(self, mock_path_exists):
-        mock_path_exists.return_value = True
-
+        # No /etc/machine-id -> no creation
+        mock_path_exists.return_value = False
         with patch('builtins.open') as m_open:
             self.setup.setup_machine_id()
+            print(mock_path_exists.mock_calls)
+            m_open.assert_not_called()
+
+        mock_path_exists.return_value = True
+
+        # Empty /etc/machine-id -> truncate
+        m_open = mock_open(read_data='')
+        with patch('builtins.open', m_open):
+            self.setup.setup_machine_id()
             m_open.assert_called_once_with(
-                'root_dir/etc/machine-id', 'w'
+                'root_dir/etc/machine-id', 'r+'
             )
+            m_open().truncate.assert_called_once_with(0)
 
-        mock_path_exists.return_value = False
+        # Filled /etc/machine-id -> truncate
+        m_open = mock_open(read_data='9d75e31cca5943b3a527345e0684d5b6')
+        with patch('builtins.open', m_open):
+            self.setup.setup_machine_id()
+            m_open.assert_called_once_with(
+                'root_dir/etc/machine-id', 'r+'
+            )
+            m_open().truncate.assert_called_once_with(0)
 
-        self.setup.setup_machine_id()
+        # Explicitly uninitialized /etc/machine-id -> keep
+        m_open = mock_open(read_data='uninitialized')
+        with patch('builtins.open', m_open):
+            self.setup.setup_machine_id()
+            m_open.assert_called_once_with(
+                'root_dir/etc/machine-id', 'r+'
+            )
+            m_open().truncate.assert_not_called()
 
     @patch('kiwi.system.setup.Command.run')
     @patch('kiwi.system.setup.Path.which')
@@ -1298,7 +1326,7 @@ class TestSystemSetup:
         mock_command.assert_called_once_with(
             [
                 'chroot', 'root_dir',
-                'setfiles', 'security_context_file', '/', '-v'
+                'setfiles', 'security_context_file', '/', '-v', '-F'
             ]
         )
 
