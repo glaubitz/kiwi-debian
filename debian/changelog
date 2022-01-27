@@ -1,3 +1,10 @@
+kiwi (9.24.19-1) unstable; urgency=medium
+
+  * New upstream release
+  * Fix grub package dependencies for kiwi-systemdeps-bootloaders
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Thu, 27 Jan 2022 21:41:53 +0100
+
 kiwi (9.24.12-1) unstable; urgency=medium
 
   * Initial release (Closes: #994231)
