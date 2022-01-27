@@ -109,7 +109,20 @@ Description: KIWI - Core host system dependencies
 
 Package: kiwi-systemdeps-bootloaders
 Architecture: any
-Depends: grub2, kiwi-systemdeps-core, s390-tools [s390x], ${misc:Depends}
+Depends: grub-coreboot-bin [amd64 i386 x32],
+         grub-efi-amd64-bin [amd64 i386 x32],
+         grub-efi-arm-bin [armel armhf],
+         grub-efi-arm64-bin [arm64],
+         grub-efi-ia32-bin [amd64 i386 x32],
+         grub-efi-ia64-bin [ia64],
+         grub-ieee1275-bin [amd64 i386 powerpc ppc64 ppc64el sparc64 x32],
+         grub-pc-bin [amd64 i386 x32],
+         grub-uboot-bin [armel armhf],
+         grub-xen-bin [amd64 i386],
+         grub-yeeloong-bin [mipsel],
+         kiwi-systemdeps-core,
+         s390-tools [s390x],
+         ${misc:Depends}
 Description: KIWI - host requirements for configuring bootloaders
  Host setup helper to pull in all packages required/useful on
  the build host for configuring bootloaders on images
