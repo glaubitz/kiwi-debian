@@ -293,6 +293,9 @@ class TestSystemPrepare:
         self.manager.request_product.assert_called_once_with(
             'kiwi'
         )
+        self.manager.setup_repository_modules.assert_called_once_with(
+            {'disable': ['mod_c'], 'enable': ['mod_a:stream', 'mod_b']}
+        )
         self.manager.process_install_requests_bootstrap.assert_called_once_with(
             self.system.root_bind
         )
@@ -399,6 +402,9 @@ class TestSystemPrepare:
         self.system.pinch_system(self.manager, force=True)
         self.manager.process_delete_requests.assert_has_calls(
             [call(False), call(True)]
+        )
+        self.manager.post_process_delete_requests.assert_has_calls(
+            [call(self.system.root_bind), call(self.system.root_bind)]
         )
 
     @patch('kiwi.system.prepare.CommandProcess.poll_show_progress')

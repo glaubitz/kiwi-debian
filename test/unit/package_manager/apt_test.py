@@ -56,6 +56,9 @@ class TestPackageManagerApt:
         with self._caplog.at_level(logging.WARNING):
             assert self.manager.exclude_requests == []
 
+    def test_setup_repository_modules(self):
+        self.manager.setup_repository_modules({})
+
     def test_process_install_requests_bootstrap_no_dist(self):
         self.manager.distribution = None
         with raises(KiwiDebootstrapError):
@@ -168,13 +171,55 @@ class TestPackageManagerApt:
 
     @patch('kiwi.command.Command.call')
     @patch('kiwi.command.Command.run')
-    def test_process_delete_requests_force(self, mock_run, mock_call):
+    @patch('kiwi.package_manager.apt.Path.wipe')
+    def test_process_delete_requests_force(
+        self, mock_Path_wipe, mock_run, mock_call
+    ):
         self.manager.request_package('vim')
         self.manager.process_delete_requests(True)
+        assert mock_run.call_args_list == [
+            call(
+                [
+                    'chroot', 'root-dir', 'dpkg', '-l', 'vim'
+                ]
+            ),
+            call(
+                [
+                    'cp', 'root-dir/usr/sbin/ldconfig',
+                    'root-dir/usr/sbin/ldconfig.orig'
+                ]
+            ),
+            call(
+                [
+                    'cp', 'root-dir/usr/bin/true',
+                    'root-dir/usr/sbin/ldconfig'
+                ]
+            )
+        ]
         mock_call.assert_called_once_with(
-            ['chroot', 'root-dir', 'dpkg', '--force-all', '-r', 'vim'],
+            [
+                'chroot', 'root-dir', 'dpkg',
+                '--remove', '--force-remove-reinstreq',
+                '--force-remove-essential', 'vim'
+            ],
             ['env']
         )
+        assert mock_Path_wipe.call_args_list == [
+            call('/var/lib/dpkg/info/vim.preinst'),
+            call('/var/lib/dpkg/info/vim.prerm')
+        ]
+
+    @patch('kiwi.command.Command.run')
+    def test_post_process_delete_requests(self, mock_run):
+        self.manager.post_process_delete_requests()
+        assert mock_run.call_args_list == [
+            call(
+                [
+                    'mv', 'root-dir/usr/sbin/ldconfig.orig',
+                    'root-dir/usr/sbin/ldconfig'
+                ]
+            )
+        ]
 
     @patch('kiwi.command.Command.run')
     def test_process_delete_requests_package_missing(self, mock_run):

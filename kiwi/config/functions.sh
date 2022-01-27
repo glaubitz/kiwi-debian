@@ -25,6 +25,36 @@ export LC_ALL=C
 #======================================
 # Common Functions
 #--------------------------------------
+function mountCgroups {
+    mount -t tmpfs cgroup_root /sys/fs/cgroup
+    for group in devices blkio cpuset pids; do
+        mkdir -p /sys/fs/cgroup/"${group}"
+        mount -t cgroup "${group}" -o "${group}" /sys/fs/cgroup/"${group}"
+    done
+}
+
+function umountCgroups {
+    for group in devices blkio cpuset pids; do
+        umount /sys/fs/cgroup/"${group}"
+    done
+    umount /sys/fs/cgroup
+}
+
+function setupContainerRuntime {
+    cat >/etc/containers/containers.conf <<- EOF
+	[engine]
+	no_pivot_root = true
+	cgroups = "disabled"
+	events_logger = "none"
+	cgroup_manager = "cgroupfs"
+	EOF
+
+    cat >/etc/containers/storage.conf <<- EOF
+	[storage]
+	driver = "vfs"
+	EOF
+}
+
 function baseSystemdServiceInstalled {
     local service=$1
     local sd_dirs="
@@ -323,7 +353,7 @@ function baseStripFirmware {
     local kernel_module
     local firmware
     mkdir -p /lib/firmware-required
-    find "${base}" \( -name "*.ko" -o -name "*.ko.xz" \) -print0 | \
+    find "${base}" \( -name "*.ko" -o -name "*.ko.xz" -o -name "*.ko.zst" -o -name "*.ko.gz" \) -print0 | \
     while IFS= read -r -d $'\0' kernel_module; do
         firmware=$(modinfo "${kernel_module}" | grep ^firmware || :)
         if [ -z "${firmware}" ];then
@@ -335,10 +365,14 @@ function baseStripFirmware {
         fi
         # could be more than one, loop
         for fname in $name ; do
-            for match in /lib/firmware/"${fname}"      \
-                         /lib/firmware/"${fname}".xz   \
-                         /lib/firmware/*/"${fname}"    \
-                         /lib/firmware/*/"${fname}".xz ;do
+            for match in /lib/firmware/"${fname}"       \
+                         /lib/firmware/"${fname}".xz    \
+                         /lib/firmware/"${fname}".gz    \
+                         /lib/firmware/"${fname}".zst   \
+                         /lib/firmware/*/"${fname}"     \
+                         /lib/firmware/*/"${fname}".xz  \
+                         /lib/firmware/*/"${fname}".gz  \
+                         /lib/firmware/*/"${fname}".zst ;do
                 if [ -e "${match}" ];then
                     match="${match//\/lib\/firmware\//}"
                     bmdir=$(dirname "${match}")

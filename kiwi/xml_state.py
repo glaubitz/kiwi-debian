@@ -309,6 +309,22 @@ class XMLState:
                 return package_manager[0]
         return Defaults.get_default_package_manager()
 
+    def get_release_version(self) -> str:
+        """
+        Get configured release version from selected preferences section
+
+        :return: Content of the <release-version> section or ''
+
+        :rtype: str
+        """
+        release_version = ''
+        for preferences in self.get_preferences_sections():
+            release_version = preferences.get_release_version()
+            if release_version:
+                release_version = release_version[0]
+                break
+        return release_version
+
     def get_packages_sections(self, section_types: List) -> List:
         """
         List of packages sections matching given section type(s)
@@ -606,6 +622,43 @@ class XMLState:
         :rtype: str
         """
         return self.get_collection_type('image')
+
+    def get_collection_modules(self) -> Dict[str, List[str]]:
+        """
+        Dict of collection modules to enable and/or disable
+
+        :return:
+            Dict of the form:
+
+            .. code:: python
+
+                {
+                    'enable': [
+                        "module:stream", "module"
+                    ],
+                    'disable': [
+                        "module"
+                    ]
+                }
+
+        :rtype: dict
+        """
+        modules: Dict[str, List[str]] = {
+            'disable': [],
+            'enable': []
+        }
+        for packages in self.get_bootstrap_packages_sections():
+            for collection_module in packages.get_collectionModule():
+                module_name = collection_module.get_name()
+                if collection_module.get_enable() is False:
+                    modules['disable'].append(module_name)
+                else:
+                    stream = collection_module.get_stream()
+                    if stream:
+                        modules['enable'].append(f'{module_name}:{stream}')
+                    else:
+                        modules['enable'].append(module_name)
+        return modules
 
     def get_collections(self, section_type: str = 'image') -> List:
         """
@@ -1987,20 +2040,15 @@ class XMLState:
 
     def copy_bootincluded_packages(self, target_state: Any) -> None:
         """
-        Copy packages marked as bootinclude to the packages type=image
-        (or type=bootstrap if no type=image was found) section in the
-        target xml state. The package will also be removed from the
-        packages type=delete section in the target xml state if
-        present there
+        Copy packages marked as bootinclude to the packages
+        type=bootstrap section in the target xml state. The package
+        will also be removed from the packages type=delete section
+        in the target xml state if present there
 
         :param object target_state: XMLState instance
         """
         target_packages_sections = \
-            target_state.get_image_packages_sections()
-        if not target_packages_sections:
-            # no packages type=image section was found, add to bootstrap
-            target_packages_sections = \
-                target_state.get_bootstrap_packages_sections()
+            target_state.get_bootstrap_packages_sections()
         if target_packages_sections:
             target_packages_section = \
                 target_packages_sections[0]

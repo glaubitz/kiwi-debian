@@ -21,6 +21,7 @@ from kiwi.bootloader.template.grub2 import BootLoaderTemplateGrub2
 from kiwi.exceptions import (
     KiwiBootLoaderGrubPlatformError,
     KiwiBootLoaderGrubSecureBootError,
+    KiwiFileNotFound,
     KiwiTemplateError,
     KiwiBootLoaderGrubDataError,
     KiwiBootLoaderGrubFontError,
@@ -276,9 +277,8 @@ class TestBootLoaderConfigGrub2:
 
     @patch('os.path.exists')
     @patch.object(BootLoaderConfigGrub2, '_copy_grub_config_to_efi_path')
-    @patch('kiwi.bootloader.config.grub2.Command.run')
     def test_write(
-        self, mock_command, mock_copy_grub_config_to_efi_path, mock_exists
+        self, mock_copy_grub_config_to_efi_path, mock_exists
     ):
         mock_exists.return_value = True
         self.bootloader.config = 'some-data'
@@ -297,20 +297,24 @@ class TestBootLoaderConfigGrub2:
             file_handle.write.assert_called_once_with(
                 'some-data'
             )
+
+    @patch('kiwi.bootloader.config.grub2.Command.run')
+    def test_create_embedded_fat_efi_image(self, mock_command):
+        self.bootloader._create_embedded_fat_efi_image('tmp-esp-image')
         assert mock_command.call_args_list == [
             call(
                 [
-                    'qemu-img', 'create', 'root_dir/boot/x86_64/efi', '20M'
+                    'qemu-img', 'create', 'tmp-esp-image', '20M'
                 ]
             ),
             call(
                 [
-                    'mkdosfs', '-n', 'BOOT', 'root_dir/boot/x86_64/efi'
+                    'mkdosfs', '-n', 'BOOT', 'tmp-esp-image'
                 ]
             ),
             call(
                 [
-                    'mcopy', '-Do', '-s', '-i', 'root_dir/boot/x86_64/efi',
+                    'mcopy', '-Do', '-s', '-i', 'tmp-esp-image',
                     'root_dir/EFI', '::'
                 ]
             )
@@ -663,6 +667,38 @@ class TestBootLoaderConfigGrub2:
             call('SECURE_BOOT', 'yes')
         ]
 
+    @patch('os.path.exists')
+    def test_setup_live_image_config_custom_template(self, mock_exists):
+        bootloader = Mock()
+        bootloader.get_grub_template.return_value = "example.template"
+        self.bootloader.xml_state.build_type.bootloader.append(bootloader)
+        mock_exists.return_value = True
+        self.bootloader.multiboot = False
+        with patch('builtins.open') as mock_open:
+            mock_open.return_value = MagicMock(spec=io.IOBase)
+            file_handle = mock_open.return_value.__enter__.return_value
+            file_handle.read.return_value = "example template contents"
+            self.bootloader.setup_live_image_config(self.mbrid)
+        assert self.bootloader.config == "example template contents"
+
+    @patch('os.path.exists')
+    def test_setup_live_image_config_custom_template_file_does_not_exist(self, mock_exists):
+        bootloader = Mock()
+        bootloader.get_grub_template.return_value = "example.template"
+        self.bootloader.xml_state.build_type.bootloader.append(bootloader)
+        mock_exists.return_value = False
+        self.bootloader.multiboot = False
+        with raises(KiwiFileNotFound):
+            self.bootloader.setup_live_image_config(self.mbrid)
+
+    def test_setup_live_image_config_custom_template_not_set(self):
+        bootloader = Mock()
+        bootloader.get_grub_template.return_value = ""
+        self.bootloader.xml_state.build_type.bootloader.append(bootloader)
+        self.bootloader.multiboot = False
+        self.bootloader.setup_live_image_config(self.mbrid)
+        self.grub2.get_iso_template.assert_called_once()
+
     def test_setup_live_image_config_multiboot(self):
         self.bootloader.multiboot = True
         self.bootloader.setup_live_image_config(self.mbrid)
@@ -744,7 +780,8 @@ class TestBootLoaderConfigGrub2:
                 'root=rootdev nomodeset console=ttyS0 console=tty0\n' \
                 'root=PARTUUID=xx'
             file_handle_grubenv.read.return_value = 'root=rootdev'
-            file_handle_menu.read.return_value = 'options foo bar'
+            file_handle_menu.read.return_value = \
+                'options foo\nlinux unexpected/boot/vmlinuz\ninitrd /boot/initrd'
 
             self.bootloader.setup_disk_image_config(
                 boot_options={
@@ -777,12 +814,13 @@ class TestBootLoaderConfigGrub2:
                     'set linux=linux\n'
                     'set initrd=initrd\n'
                     'if [ "${grub_cpu}" = "x86_64" -o '
-                    '"${grub_cpu}" = "i386" ];then\n'
+                    '"${grub_cpu}" = "i386" ]; then\n'
                     '    if [ "${grub_platform}" = "efi" ]; then\n'
                     '        set linux=linuxefi\n'
                     '        set initrd=initrdefi\n'
                     '    fi\n'
                     'fi\n'
+                    'export linux initrd\n'
                 ),
                 call(
                     'root=rootdev nomodeset console=ttyS0 console=tty0'
@@ -799,9 +837,12 @@ class TestBootLoaderConfigGrub2:
             file_handle_grubenv.write.assert_called_once_with(
                 'root=overlay:UUID=ID'
             )
-            file_handle_menu.write.assert_called_once_with(
-                'options some-cmdline root=UUID=foo'
-            )
+            assert 'options some-cmdline root=UUID=foo' in \
+                file_handle_menu.write.call_args_list[0][0][0].split(os.linesep)
+            assert 'linux /boot/vmlinuz' in \
+                file_handle_menu.write.call_args_list[1][0][0].split(os.linesep)
+            assert 'initrd /boot/initrd' in \
+                file_handle_menu.write.call_args_list[1][0][0].split(os.linesep)
 
     @patch.object(BootLoaderConfigGrub2, '_mount_system')
     @patch.object(BootLoaderConfigGrub2, '_copy_grub_config_to_efi_path')
@@ -842,12 +883,13 @@ class TestBootLoaderConfigGrub2:
                     'set linux=linux\n'
                     'set initrd=initrd\n'
                     'if [ "${grub_cpu}" = "x86_64" -o '
-                    '"${grub_cpu}" = "i386" ];then\n'
+                    '"${grub_cpu}" = "i386" ]; then\n'
                     '    if [ "${grub_platform}" = "efi" ]; then\n'
                     '        set linux=linuxefi\n'
                     '        set initrd=initrdefi\n'
                     '    fi\n'
                     'fi\n'
+                    'export linux initrd\n'
                 ),
                 call(
                     '\t$linux ${rel_dirname}/${basename} ...\n'
@@ -1720,13 +1762,6 @@ class TestBootLoaderConfigGrub2:
                     call(
                         [
                             'rsync', '-a', 'root_dir/boot/efi/', 'root_dir'
-                        ]
-                    ),
-                    call(
-                        [
-                            'rsync', '-a', '--exclude', '/*.module',
-                            'root_dir/usr/share/grub2/x86_64-efi/',
-                            'root_dir/boot/grub2/x86_64-efi'
                         ]
                     ),
                     call(

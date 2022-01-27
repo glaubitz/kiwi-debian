@@ -627,6 +627,61 @@ file was fetched</a:documentation>
   </div>
   <!--
     ==========================================
+    common element <collectionModule>
+    
+  -->
+  <div>
+    <sch:pattern id="collection_module_scope">
+      <sch:rule context="collectionModule">
+        <sch:assert test="../@type='bootstrap'">collectionModule is only available in the bootstrap packages section</sch:assert>
+      </sch:rule>
+    </sch:pattern>
+    <sch:pattern id="collection_module_disable_constraint">
+      <sch:rule context="collectionModule">
+        <sch:assert test="@enable='true' or not(@stream)">@stream attribute is not allowed to disable a module</sch:assert>
+      </sch:rule>
+    </sch:pattern>
+    <define name="k.collectionModule.name.attribute">
+      <attribute name="name">
+        <ref name="safe-posix-name"/>
+      </attribute>
+    </define>
+    <define name="k.collectionModule.stream.attribute">
+      <attribute name="stream">
+        <ref name="safe-posix-name"/>
+      </attribute>
+    </define>
+    <define name="k.collectionModule.arch.attribute">
+      <ref name="k.arch.attribute"/>
+    </define>
+    <define name="k.collectionModule.enable.attribute">
+      <attribute name="enable">
+        <a:documentation>Specify the module to become enabled (for the optionally
+given stream) or disabled.</a:documentation>
+        <data type="boolean"/>
+      </attribute>
+    </define>
+    <define name="k.collectionModule.attlist">
+      <interleave>
+        <ref name="k.collectionModule.name.attribute"/>
+        <ref name="k.collectionModule.enable.attribute"/>
+        <optional>
+          <ref name="k.collectionModule.stream.attribute"/>
+        </optional>
+        <optional>
+          <ref name="k.collectionModule.arch.attribute"/>
+        </optional>
+      </interleave>
+    </define>
+    <define name="k.collectionModule">
+      <element name="collectionModule">
+        <ref name="k.collectionModule.attlist"/>
+        <empty/>
+      </element>
+    </define>
+  </div>
+  <!--
+    ==========================================
     common element <oem-boot-title>
     
   -->
@@ -1302,6 +1357,26 @@ the device is looked up in /dev/disk/by-* and /dev/mapper/*</a:documentation>
         <a:documentation>Name of the Package Manager</a:documentation>
         <ref name="k.packagemanager.attlist"/>
         <ref name="k.packagemanager.content"/>
+      </element>
+    </define>
+  </div>
+  <!--
+    ==========================================
+    common element <release-version>
+    
+  -->
+  <div>
+    <define name="k.release-version.content">
+      <text/>
+    </define>
+    <define name="k.release-version.attlist">
+      <empty/>
+    </define>
+    <define name="k.release-version">
+      <element name="release-version">
+        <a:documentation>Name of the Package Manager</a:documentation>
+        <ref name="k.release-version.attlist"/>
+        <ref name="k.release-version.content"/>
       </element>
     </define>
   </div>
@@ -2170,8 +2245,10 @@ uses a standard BIOS but there are also other firmware
 systems like efi, coreboot, etc.. This attribute is
 used to differentiate the image according to the firmware
 which boots up the system. It mostly has an impact on
-the disk layout and the partition table type. By default
-the standard x86 bios firmware setup is used</a:documentation>
+the disk layout and the partition table type. The default
+firmware setting is based on the architecture. If no
+action should be taken on behalf of a firmware setting
+or kiwi's default selection, set the firmware to: custom</a:documentation>
         <choice>
           <value>bios</value>
           <value>ec2</value>
@@ -2179,6 +2256,7 @@ the standard x86 bios firmware setup is used</a:documentation>
           <value>uefi</value>
           <value>ofw</value>
           <value>opal</value>
+          <value>custom</value>
         </choice>
       </attribute>
       <sch:pattern id="firmware" is-a="image_type">
@@ -3512,6 +3590,20 @@ editbootconfig custom scripts</a:documentation>
         <sch:param name="types" value="oem iso"/>
       </sch:pattern>
     </define>
+    <define name="k.bootloader.grub_template.attribute">
+      <attribute name="grub_template">
+        <a:documentation>Specifies a custom grub bootloader template file which will be used
+instead of the one provided with Kiwi. A static bootloader template to
+create the grub config file is only used in Kiwi if the native method
+via the grub mkconfig toolchain does not work properly. As of today,
+this is only the case for live and install ISO images. Thus, this
+setting only affects the oem and iso image types.</a:documentation>
+      </attribute>
+      <sch:pattern id="loader_grub_template" is-a="bootloader_image_type">
+        <sch:param name="attr" value="grub_template"/>
+        <sch:param name="types" value="oem iso"/>
+      </sch:pattern>
+    </define>
     <define name="k.bootloader.console.attribute">
       <attribute name="console">
         <a:documentation>Specifies the bootloader console.
@@ -3598,6 +3690,9 @@ for 4k DASD devices use CDL</a:documentation>
         </optional>
         <optional>
           <ref name="k.bootloader.targettype.attribute"/>
+        </optional>
+        <optional>
+          <ref name="k.bootloader.grub_template.attribute"/>
         </optional>
       </interleave>
     </define>
@@ -4573,6 +4668,9 @@ or plusRecommended</a:documentation>
             <ref name="k.namedCollection"/>
           </zeroOrMore>
           <zeroOrMore>
+            <ref name="k.collectionModule"/>
+          </zeroOrMore>
+          <zeroOrMore>
             <ref name="k.product"/>
           </zeroOrMore>
           <zeroOrMore>
@@ -4626,6 +4724,9 @@ definition</a:documentation>
           </optional>
           <optional>
             <ref name="k.packagemanager"/>
+          </optional>
+          <optional>
+            <ref name="k.release-version"/>
           </optional>
           <optional>
             <ref name="k.rpm-locale-filtering"/>

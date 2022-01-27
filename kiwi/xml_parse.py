@@ -3,7 +3,7 @@
 
 #
 # Generated  by generateDS.py version 2.29.24.
-# Python 3.6.13 (default, Mar 10 2021, 18:30:35) [GCC]
+# Python 3.6.15 (default, Sep 23 2021, 15:41:43) [GCC]
 #
 # Command line options:
 #   ('-f', '')
@@ -16,7 +16,7 @@
 #   kiwi/schema/kiwi_for_generateDS.xsd
 #
 # Command line:
-#   /home/david/work/kiwi/.tox/3/bin/generateDS.py -f --external-encoding="utf-8" --no-dates --no-warnings -o "kiwi/xml_parse.py" kiwi/schema/kiwi_for_generateDS.xsd
+#   /home/ms/Project/kiwi/.tox/3.6/bin/generateDS.py -f --external-encoding="utf-8" --no-dates --no-warnings -o "kiwi/xml_parse.py" kiwi/schema/kiwi_for_generateDS.xsd
 #
 # Current working directory (os.getcwd()):
 #   kiwi
@@ -1547,6 +1547,130 @@ class namedCollection(GeneratedsSuper):
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
 # end class namedCollection
+
+
+class collectionModule(GeneratedsSuper):
+    subclass = None
+    superclass = None
+    def __init__(self, name=None, enable=None, stream=None, arch=None):
+        self.original_tagname_ = None
+        self.name = _cast(None, name)
+        self.enable = _cast(bool, enable)
+        self.stream = _cast(None, stream)
+        self.arch = _cast(None, arch)
+    def factory(*args_, **kwargs_):
+        if CurrentSubclassModule_ is not None:
+            subclass = getSubclassFromModule_(
+                CurrentSubclassModule_, collectionModule)
+            if subclass is not None:
+                return subclass(*args_, **kwargs_)
+        if collectionModule.subclass:
+            return collectionModule.subclass(*args_, **kwargs_)
+        else:
+            return collectionModule(*args_, **kwargs_)
+    factory = staticmethod(factory)
+    def get_name(self): return self.name
+    def set_name(self, name): self.name = name
+    def get_enable(self): return self.enable
+    def set_enable(self, enable): self.enable = enable
+    def get_stream(self): return self.stream
+    def set_stream(self, stream): self.stream = stream
+    def get_arch(self): return self.arch
+    def set_arch(self, arch): self.arch = arch
+    def validate_safe_posix_name(self, value):
+        # Validate type safe-posix-name, a restriction on xs:token.
+        if value is not None and Validate_simpletypes_:
+            if not self.gds_validate_simple_patterns(
+                    self.validate_safe_posix_name_patterns_, value):
+                warnings_.warn('Value "%s" does not match xsd pattern restrictions: %s' % (value.encode('utf-8'), self.validate_safe_posix_name_patterns_, ))
+    validate_safe_posix_name_patterns_ = [['^[a-zA-Z0-9_\\-\\.]+$']]
+    def validate_arch_name(self, value):
+        # Validate type arch-name, a restriction on xs:token.
+        if value is not None and Validate_simpletypes_:
+            if not self.gds_validate_simple_patterns(
+                    self.validate_arch_name_patterns_, value):
+                warnings_.warn('Value "%s" does not match xsd pattern restrictions: %s' % (value.encode('utf-8'), self.validate_arch_name_patterns_, ))
+    validate_arch_name_patterns_ = [['^.*$']]
+    def hasContent_(self):
+        if (
+
+        ):
+            return True
+        else:
+            return False
+    def export(self, outfile, level, namespaceprefix_='', name_='collectionModule', namespacedef_='', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('collectionModule')
+        if imported_ns_def_ is not None:
+            namespacedef_ = imported_ns_def_
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.original_tagname_ is not None:
+            name_ = self.original_tagname_
+        showIndent(outfile, level, pretty_print)
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        already_processed = set()
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='collectionModule')
+        if self.hasContent_():
+            outfile.write('>%s' % (eol_, ))
+            self.exportChildren(outfile, level + 1, namespaceprefix_='', name_='collectionModule', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+        else:
+            outfile.write('/>%s' % (eol_, ))
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='collectionModule'):
+        if self.name is not None and 'name' not in already_processed:
+            already_processed.add('name')
+            outfile.write(' name=%s' % (quote_attrib(self.name), ))
+        if self.enable is not None and 'enable' not in already_processed:
+            already_processed.add('enable')
+            outfile.write(' enable="%s"' % self.gds_format_boolean(self.enable, input_name='enable'))
+        if self.stream is not None and 'stream' not in already_processed:
+            already_processed.add('stream')
+            outfile.write(' stream=%s' % (quote_attrib(self.stream), ))
+        if self.arch is not None and 'arch' not in already_processed:
+            already_processed.add('arch')
+            outfile.write(' arch=%s' % (quote_attrib(self.arch), ))
+    def exportChildren(self, outfile, level, namespaceprefix_='', name_='collectionModule', fromsubclass_=False, pretty_print=True):
+        pass
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('name', node)
+        if value is not None and 'name' not in already_processed:
+            already_processed.add('name')
+            self.name = value
+            self.name = ' '.join(self.name.split())
+            self.validate_safe_posix_name(self.name)    # validate type safe-posix-name
+        value = find_attr_value_('enable', node)
+        if value is not None and 'enable' not in already_processed:
+            already_processed.add('enable')
+            if value in ('true', '1'):
+                self.enable = True
+            elif value in ('false', '0'):
+                self.enable = False
+            else:
+                raise_parse_error(node, 'Bad boolean attribute')
+        value = find_attr_value_('stream', node)
+        if value is not None and 'stream' not in already_processed:
+            already_processed.add('stream')
+            self.stream = value
+            self.stream = ' '.join(self.stream.split())
+            self.validate_safe_posix_name(self.stream)    # validate type safe-posix-name
+        value = find_attr_value_('arch', node)
+        if value is not None and 'arch' not in already_processed:
+            already_processed.add('arch')
+            self.arch = value
+            self.arch = ' '.join(self.arch.split())
+            self.validate_arch_name(self.arch)    # validate type arch-name
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        pass
+# end class collectionModule
 
 
 class product(GeneratedsSuper):
@@ -4762,7 +4886,7 @@ class bootloader(GeneratedsSuper):
     provide configuration parameters for it"""
     subclass = None
     superclass = None
-    def __init__(self, name=None, console=None, serial_line=None, timeout=None, timeout_style=None, targettype=None):
+    def __init__(self, name=None, console=None, serial_line=None, timeout=None, timeout_style=None, targettype=None, grub_template=None):
         self.original_tagname_ = None
         self.name = _cast(None, name)
         self.console = _cast(None, console)
@@ -4770,6 +4894,7 @@ class bootloader(GeneratedsSuper):
         self.timeout = _cast(int, timeout)
         self.timeout_style = _cast(None, timeout_style)
         self.targettype = _cast(None, targettype)
+        self.grub_template = _cast(None, grub_template)
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
@@ -4793,6 +4918,8 @@ class bootloader(GeneratedsSuper):
     def set_timeout_style(self, timeout_style): self.timeout_style = timeout_style
     def get_targettype(self): return self.targettype
     def set_targettype(self, targettype): self.targettype = targettype
+    def get_grub_template(self): return self.grub_template
+    def set_grub_template(self, grub_template): self.grub_template = grub_template
     def validate_grub_console(self, value):
         # Validate type grub_console, a restriction on xs:token.
         if value is not None and Validate_simpletypes_:
@@ -4846,6 +4973,9 @@ class bootloader(GeneratedsSuper):
         if self.targettype is not None and 'targettype' not in already_processed:
             already_processed.add('targettype')
             outfile.write(' targettype=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.targettype), input_name='targettype')), ))
+        if self.grub_template is not None and 'grub_template' not in already_processed:
+            already_processed.add('grub_template')
+            outfile.write(' grub_template=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.grub_template), input_name='grub_template')), ))
     def exportChildren(self, outfile, level, namespaceprefix_='', name_='bootloader', fromsubclass_=False, pretty_print=True):
         pass
     def build(self, node):
@@ -4890,6 +5020,10 @@ class bootloader(GeneratedsSuper):
             already_processed.add('targettype')
             self.targettype = value
             self.targettype = ' '.join(self.targettype.split())
+        value = find_attr_value_('grub_template', node)
+        if value is not None and 'grub_template' not in already_processed:
+            already_processed.add('grub_template')
+            self.grub_template = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
 # end class bootloader
@@ -7532,7 +7666,7 @@ class packages(GeneratedsSuper):
     """Specifies Packages/Patterns Used in Different Stages"""
     subclass = None
     superclass = None
-    def __init__(self, type_=None, profiles=None, patternType=None, archive=None, ignore=None, namedCollection=None, product=None, package=None):
+    def __init__(self, type_=None, profiles=None, patternType=None, archive=None, ignore=None, namedCollection=None, collectionModule=None, product=None, package=None):
         self.original_tagname_ = None
         self.type_ = _cast(None, type_)
         self.profiles = _cast(None, profiles)
@@ -7549,6 +7683,10 @@ class packages(GeneratedsSuper):
             self.namedCollection = []
         else:
             self.namedCollection = namedCollection
+        if collectionModule is None:
+            self.collectionModule = []
+        else:
+            self.collectionModule = collectionModule
         if product is None:
             self.product = []
         else:
@@ -7583,6 +7721,11 @@ class packages(GeneratedsSuper):
     def add_namedCollection(self, value): self.namedCollection.append(value)
     def insert_namedCollection_at(self, index, value): self.namedCollection.insert(index, value)
     def replace_namedCollection_at(self, index, value): self.namedCollection[index] = value
+    def get_collectionModule(self): return self.collectionModule
+    def set_collectionModule(self, collectionModule): self.collectionModule = collectionModule
+    def add_collectionModule(self, value): self.collectionModule.append(value)
+    def insert_collectionModule_at(self, index, value): self.collectionModule.insert(index, value)
+    def replace_collectionModule_at(self, index, value): self.collectionModule[index] = value
     def get_product(self): return self.product
     def set_product(self, product): self.product = product
     def add_product(self, value): self.product.append(value)
@@ -7604,6 +7747,7 @@ class packages(GeneratedsSuper):
             self.archive or
             self.ignore or
             self.namedCollection or
+            self.collectionModule or
             self.product or
             self.package
         ):
@@ -7652,6 +7796,8 @@ class packages(GeneratedsSuper):
             ignore_.export(outfile, level, namespaceprefix_, name_='ignore', pretty_print=pretty_print)
         for namedCollection_ in self.namedCollection:
             namedCollection_.export(outfile, level, namespaceprefix_, name_='namedCollection', pretty_print=pretty_print)
+        for collectionModule_ in self.collectionModule:
+            collectionModule_.export(outfile, level, namespaceprefix_, name_='collectionModule', pretty_print=pretty_print)
         for product_ in self.product:
             product_.export(outfile, level, namespaceprefix_, name_='product', pretty_print=pretty_print)
         for package_ in self.package:
@@ -7694,6 +7840,11 @@ class packages(GeneratedsSuper):
             obj_.build(child_)
             self.namedCollection.append(obj_)
             obj_.original_tagname_ = 'namedCollection'
+        elif nodeName_ == 'collectionModule':
+            obj_ = collectionModule.factory()
+            obj_.build(child_)
+            self.collectionModule.append(obj_)
+            obj_.original_tagname_ = 'collectionModule'
         elif nodeName_ == 'product':
             obj_ = product.factory()
             obj_.build(child_)
@@ -7713,7 +7864,7 @@ class preferences(GeneratedsSuper):
     sections based on profiles combine to create on vaild definition"""
     subclass = None
     superclass = None
-    def __init__(self, profiles=None, arch=None, bootsplash_theme=None, bootloader_theme=None, keytable=None, locale=None, packagemanager=None, rpm_locale_filtering=None, rpm_check_signatures=None, rpm_excludedocs=None, showlicense=None, timezone=None, type_=None, version=None):
+    def __init__(self, profiles=None, arch=None, bootsplash_theme=None, bootloader_theme=None, keytable=None, locale=None, packagemanager=None, release_version=None, rpm_locale_filtering=None, rpm_check_signatures=None, rpm_excludedocs=None, showlicense=None, timezone=None, type_=None, version=None):
         self.original_tagname_ = None
         self.profiles = _cast(None, profiles)
         self.arch = _cast(None, arch)
@@ -7737,6 +7888,10 @@ class preferences(GeneratedsSuper):
             self.packagemanager = []
         else:
             self.packagemanager = packagemanager
+        if release_version is None:
+            self.release_version = []
+        else:
+            self.release_version = release_version
         if rpm_locale_filtering is None:
             self.rpm_locale_filtering = []
         else:
@@ -7801,6 +7956,11 @@ class preferences(GeneratedsSuper):
     def add_packagemanager(self, value): self.packagemanager.append(value)
     def insert_packagemanager_at(self, index, value): self.packagemanager.insert(index, value)
     def replace_packagemanager_at(self, index, value): self.packagemanager[index] = value
+    def get_release_version(self): return self.release_version
+    def set_release_version(self, release_version): self.release_version = release_version
+    def add_release_version(self, value): self.release_version.append(value)
+    def insert_release_version_at(self, index, value): self.release_version.insert(index, value)
+    def replace_release_version_at(self, index, value): self.release_version[index] = value
     def get_rpm_locale_filtering(self): return self.rpm_locale_filtering
     def set_rpm_locale_filtering(self, rpm_locale_filtering): self.rpm_locale_filtering = rpm_locale_filtering
     def add_rpm_locale_filtering(self, value): self.rpm_locale_filtering.append(value)
@@ -7854,6 +8014,7 @@ class preferences(GeneratedsSuper):
             self.keytable or
             self.locale or
             self.packagemanager or
+            self.release_version or
             self.rpm_locale_filtering or
             self.rpm_check_signatures or
             self.rpm_excludedocs or
@@ -7913,6 +8074,9 @@ class preferences(GeneratedsSuper):
         for packagemanager_ in self.packagemanager:
             showIndent(outfile, level, pretty_print)
             outfile.write('<packagemanager>%s</packagemanager>%s' % (self.gds_encode(self.gds_format_string(quote_xml(packagemanager_), input_name='packagemanager')), eol_))
+        for release_version_ in self.release_version:
+            showIndent(outfile, level, pretty_print)
+            outfile.write('<release-version>%s</release-version>%s' % (self.gds_encode(self.gds_format_string(quote_xml(release_version_), input_name='release-version')), eol_))
         for rpm_locale_filtering_ in self.rpm_locale_filtering:
             showIndent(outfile, level, pretty_print)
             outfile.write('<rpm-locale-filtering>%s</rpm-locale-filtering>%s' % (self.gds_format_boolean(rpm_locale_filtering_, input_name='rpm-locale-filtering'), eol_))
@@ -7980,6 +8144,10 @@ class preferences(GeneratedsSuper):
                 packagemanager_ = ""
             packagemanager_ = self.gds_validate_string(packagemanager_, node, 'packagemanager')
             self.packagemanager.append(packagemanager_)
+        elif nodeName_ == 'release-version':
+            release_version_ = child_.text
+            release_version_ = self.gds_validate_string(release_version_, node, 'release_version')
+            self.release_version.append(release_version_)
         elif nodeName_ == 'rpm-locale-filtering':
             sval_ = child_.text
             if sval_ in ('true', '1'):
@@ -8332,6 +8500,7 @@ __all__ = [
     "archive",
     "argument",
     "bootloader",
+    "collectionModule",
     "containerconfig",
     "description",
     "dracut",
